@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игры на русском | LOGO RED LIPS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            background: linear-gradient(135deg, #fffcf7 0%, #fef3c7 40%, #fae8ff 100%);
+            background-attachment: fixed;
+        }
+        img { -webkit-user-drag: none; user-drag: none; }
+        .cozy-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .cozy-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
+
+    <!-- Шапка -->
+    <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200/80 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
+                ← На главную
+            </a>
+            <div class="flex items-center gap-3">
+                <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
+                <span class="font-black text-amber-900 text-sm hidden sm:inline">LOGO RED LIPS</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Контент -->
+    <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
+        <div class="mb-10 text-center sm:text-left">
+            <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
+                🌟 Русские игры
+            </span>
+            <h2 class="text-3xl font-extrabold text-amber-950">Развивающие игры на русском</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Автоматизация звуков, логопедические и обучающие интерактивные игры.</p>
+        </div>
+
+        <!-- Секция карточек -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Пример пустой карточки-заглушки (скоро здесь появятся твои игры) -->
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Скоро</span>
+                        <span class="text-xl">🧸</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Новые игры в разработке</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Совсем скоро здесь появятся интерактивные игры для автоматизации звуков и развития речи.
+                    </p>
+                </div>
+                <button disabled class="w-full bg-amber-200/50 text-amber-800/60 font-bold py-3 px-4 rounded-xl text-sm cursor-not-allowed">
+                    Скоро на сайте...
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
+        <p class="font-semibold">© Авторские материалы LOGO RED LIPS (@logoredlips)</p>
+    </footer>
+
+    <script>
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
