@@ -42,33 +42,72 @@
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
             <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🌟 Русские игры
+                🌟 Развивающие игры на русском
             </span>
-            <h2 class="text-3xl font-extrabold text-amber-950">Развивающие игры на русском</h2>
-            <p class="text-amber-800/80 text-sm mt-1">Автоматизация звуков, логопедические и обучающие интерактивные игры.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">Лексические темы и развитие речи</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Интерактивные игры распределены по тематическим блокам для удобного повторения.</p>
         </div>
 
-        <!-- Секция карточек -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Пример пустой карточки-заглушки (скоро здесь появятся твои игры) -->
-            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+        <!-- ================= БЛОК 1: ТЕМА "ЕДА" ================= -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-5 border-b border-amber-200/80 pb-2">
+                <span class="text-2xl">🍎</span>
                 <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Скоро</span>
-                        <span class="text-xl">🧸</span>
-                    </div>
-                    <h4 class="text-lg font-black text-amber-950 mb-2">Новые игры в разработке</h4>
-                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
-                        Совсем скоро здесь появятся интерактивные игры для автоматизации звуков и развития речи.
-                    </p>
+                    <h3 class="text-xl font-extrabold text-amber-950">Тема: Еда и продукты</h3>
+                    <p class="text-xs text-amber-800/70">Лексика, понимание речи на слух и закрепление названий продуктов</p>
                 </div>
-                <button disabled class="w-full bg-amber-200/50 text-amber-800/60 font-bold py-3 px-4 rounded-xl text-sm cursor-not-allowed">
-                    Скоро на сайте...
-                </button>
             </div>
 
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Игра про еду -->
+                <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Лексика / Еда</span>
+                            <span class="text-xl">🍓</span>
+                        </div>
+                        <h4 class="text-lg font-black text-amber-950 mb-2">Изучаем продукты</h4>
+                        <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                            Интерактивная игра для изучения и закрепления названий продуктов и блюд на русском языке.
+                        </p>
+                    </div>
+                    <a href="russian_food1.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                        Играть онлайн →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= БЛОК 2: ТЕМА "СЕМЬЯ" ================= -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-5 border-b border-rose-200/80 pb-2">
+                <span class="text-2xl">👨‍👩‍👧‍👦</span>
+                <div>
+                    <h3 class="text-xl font-extrabold text-amber-950">Тема: Семья и близкие</h3>
+                    <p class="text-xs text-amber-800/70">Члены семьи, соотнесение пар, указательный жест и базовые фразы</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Карточка-заглушка (скоро добавим игру) -->
+                <div class="cozy-card rounded-3xl p-6 border border-rose-200/60 shadow-lg shadow-rose-900/5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-extrabold bg-rose-100 text-rose-800 px-3 py-1 rounded-full">Скоро</span>
+                            <span class="text-xl">🏡</span>
+                        </div>
+                        <h4 class="text-lg font-black text-amber-950 mb-2">Игры по теме «Семья»</h4>
+                        <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                            Здесь появятся игры на изучение членов семьи и отработку фраз.
+                        </p>
+                    </div>
+                    <button disabled class="w-full bg-rose-100/60 text-rose-800/50 font-bold py-3 px-4 rounded-xl text-sm cursor-not-allowed">
+                        Готовится к публикации...
+                    </button>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Подвал -->
