@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Colors Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+</head>
+<body class="min-h-screen bg-[#F5F2EB] flex flex-col items-center justify-between p-4 select-none font-sans text-slate-800">
+
+    <!-- Шапка с прогрессом -->
+    <div class="bg-white px-6 py-3 rounded-2xl shadow-md border-2 border-amber-200 flex justify-between items-center w-full max-w-md">
+        <h1 class="text-base font-bold text-amber-800" id="round-title">🎨 Раунд 1 / 2</h1>
+        <div class="font-bold text-slate-700 text-sm">⭐ Очки: <span id="stars" class="text-amber-600">0</span> | Осталось: <span id="progress-text">11</span></div>
+    </div>
+
+    <!-- Основное игровое поле -->
+    <div class="bg-white border-4 border-amber-300 rounded-3xl p-6 shadow-xl max-w-md w-full flex flex-col items-center gap-5 my-auto text-center">
+        
+        <!-- Контейнер задания -->
+        <div id="task-container" class="w-full bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 flex flex-col items-center gap-3">
+            <!-- Динамический контент задания -->
+        </div>
+
+        <!-- Сетка вариантов ответа -->
+        <div class="w-full">
+            <div id="grid" class="grid grid-cols-2 gap-3">
+                <!-- Варианты генерируются динамически -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Экран победы (Кубок + Конфетти) -->
+    <div id="win" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm text-center shadow-2xl border-4 border-amber-400 flex flex-col items-center gap-4">
+            <div class="text-7xl animate-bounce">🏆</div>
+            <h2 class="text-2xl font-bold text-amber-700">Outstanding!</h2>
+            <p class="text-slate-600 text-sm">Ты отлично выучил все 11 цветов на английском языке!</p>
+            <button onclick="restartGame()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-xl shadow cursor-pointer text-base w-full">
+                Играть снова 🔄
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Максимальный пул 11 чистых цветов
+        const colorPool = [
+            { en: "red", hex: "#EF4444" },
+            { en: "blue", hex: "#3B82F6" },
+            { en: "green", hex: "#22C55E" },
+            { en: "yellow", hex: "#EAB308" },
+            { en: "pink", hex: "#EC4899" },
+            { en: "purple", hex: "#A855F7" },
+            { en: "orange", hex: "#F97316" },
+            { en: "brown", hex: "#78350F" },
+            { en: "black", hex: "#000000" },
+            { en: "white", hex: "#FFFFFF" },
+            { en: "grey", hex: "#6B7280" }
+        ];
+
+        let currentRound = 1;
+        let stars = 0;
+        let roundQueue = [];
+        let currentTarget = null;
+        let isAnsweringBlocked = false;
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function restartGame() {
+            currentRound = 1;
+            stars = 0;
+            document.getElementById('win').classList.add('hidden');
+            setupRound();
+        }
+
+        function setupRound() {
+            roundQueue = shuffle([...colorPool]);
+            startNextTask();
+        }
+
+        function startNextTask() {
+            if (roundQueue.length === 0) {
+                if (currentRound === 1) {
+                    currentRound = 2;
+                    setupRound();
+                    return;
+                } else {
+                    document.getElementById('win').classList.remove('hidden');
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+                    }
+                    speak("Amazing job! You won the trophy!");
+                    return;
+                }
+            }
+
+            isAnsweringBlocked = false;
+            currentTarget = roundQueue[0];
+            
+            document.getElementById('round-title').innerText = `🎨 Раунд ${currentRound} / 2`;
+            document.getElementById('progress-text').innerText = roundQueue.length;
+            document.getElementById('stars').innerText = stars;
+
+            if (currentRound === 1) {
+                renderRound1();
+            } else {
+                renderRound2();
+            }
+        }
+
+        // --- РАУНД 1: Слышим слово на английском -> Выбираем чистую цветовую плашку ---
+        function renderRound1() {
+            const taskContainer = document.getElementById('task-container');
+            taskContainer.innerHTML = `
+                <div class="text-xs font-bold text-amber-800 uppercase tracking-wide">Послухай название цвета:</div>
+                <button onclick="speakTargetColor()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-2xl text-base shadow cursor-pointer transition flex items-center gap-2">
+                    🔊 Послушать цвет
+                </button>
+            `;
+
+            speakTargetColor();
+
+            const grid = document.getElementById('grid');
+            grid.innerHTML = "";
+
+            let options = [currentTarget];
+            let others = colorPool.filter(c => c.en !== currentTarget.en);
+            options = options.concat(shuffle(others).slice(0, 3));
+            options = shuffle(options);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "h-24 rounded-2xl border-4 border-stone-300 shadow-md cursor-pointer transition transform hover:scale-105 relative overflow-hidden flex items-center justify-center";
+                btn.style.backgroundColor = opt.hex;
+                btn.dataset.color = opt.en;
+                
+                btn.innerHTML = `<div class="status-icon absolute inset-0 flex items-center justify-center text-4xl hidden bg-black/20"></div>`;
+                btn.onclick = () => checkChoiceRound1(btn, opt.en === currentTarget.en);
+                
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkChoiceRound1(selectedBtn, isCorrect) {
+            if (isAnsweringBlocked) return;
+            isAnsweringBlocked = true;
+
+            const statusDiv = selectedBtn.querySelector('.status-icon');
+            statusDiv.classList.remove('hidden');
+
+            if (isCorrect) {
+                stars += 1;
+                document.getElementById('stars').innerText = stars;
+                statusDiv.innerText = "✅";
+                speak("Correct!");
+                if (typeof confetti === 'function') confetti({ particleCount: 30, spread: 40, origin: { y: 0.7 } });
+
+                roundQueue.shift(); // Удаляем усвоенный цвет из очереди
+            } else {
+                statusDiv.innerText = "❌";
+                speak("Try again!");
+
+                // Показываем правильный ответ
+                document.querySelectorAll('#grid button').forEach(btn => {
+                    if (btn.dataset.color === currentTarget.en) {
+                        const correctStatus = btn.querySelector('.status-icon');
+                        correctStatus.innerText = "✅";
+                        correctStatus.classList.remove('hidden');
+                    }
+                });
+
+                // Перемещаем ошибку в конец очереди для повторной попытки
+                const failedItem = roundQueue.shift();
+                roundQueue.push(failedItem);
+            }
+
+            setTimeout(() => {
+                startNextTask();
+            }, 1400);
+        }
+
+        // --- РАУНД 2: Видим плашку цвета -> Выбираем слово на слух (раздельные кнопки) ---
+        function renderRound2() {
+            const taskContainer = document.getElementById('task-container');
+            taskContainer.innerHTML = `
+                <div class="text-xs font-bold text-amber-800 uppercase tracking-wide">Какой это цвет?</div>
+                <div class="w-24 h-24 rounded-2xl border-4 border-stone-300 shadow-md mx-auto" style="background-color: ${currentTarget.hex};"></div>
+            `;
+
+            const grid = document.getElementById('grid');
+            grid.innerHTML = "";
+
+            let options = [currentTarget];
+            let others = colorPool.filter(c => c.en !== currentTarget.en);
+            options = options.concat(shuffle(others).slice(0, 3));
+            options = shuffle(options);
+
+            options.forEach(opt => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = "bg-white border-2 border-stone-200 rounded-2xl p-2.5 flex flex-col gap-2 shadow-sm relative overflow-hidden";
+
+                // Кнопка выбора
+                const selectBtn = document.createElement('button');
+                selectBtn.className = "w-full bg-stone-50 hover:bg-amber-100 text-slate-800 font-black text-base py-2 rounded-xl border border-stone-200 cursor-pointer transition capitalize flex items-center justify-center gap-1";
+                selectBtn.innerText = opt.en;
+                selectBtn.onclick = () => checkChoiceRound2(cardDiv, opt.en === currentTarget.en);
+
+                // Отдельная кнопка прослушивания
+                const soundBtn = document.createElement('button');
+                soundBtn.className = "w-full bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold py-1.5 rounded-lg border border-amber-200 cursor-pointer transition flex items-center justify-center gap-1";
+                soundBtn.innerHTML = "🔊 Послушать";
+                soundBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    speak(opt.en);
+                };
+
+                cardDiv.dataset.color = opt.en;
+                cardDiv.appendChild(selectBtn);
+                cardDiv.appendChild(soundBtn);
+                grid.appendChild(cardDiv);
+            });
+        }
+
+        function checkChoiceRound2(selectedCard, isCorrect) {
+            if (isAnsweringBlocked) return;
+            isAnsweringBlocked = true;
+
+            if (isCorrect) {
+                stars += 1;
+                document.getElementById('stars').innerText = stars;
+                selectedCard.className = "bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 flex flex-col gap-2 shadow-sm relative";
+                
+                const mark = document.createElement('div');
+                mark.className = "absolute inset-0 bg-emerald-500/20 flex items-center justify-center text-4xl font-bold text-emerald-700";
+                mark.innerText = "✅";
+                selectedCard.appendChild(mark);
+
+                speak("Correct!");
+                if (typeof confetti === 'function') confetti({ particleCount: 30, spread: 40, origin: { y: 0.7 } });
+
+                roundQueue.shift();
+            } else {
+                selectedCard.className = "bg-rose-100 border-2 border-rose-500 rounded-2xl p-2.5 flex flex-col gap-2 shadow-sm relative";
+                
+                const mark = document.createElement('div');
+                mark.className = "absolute inset-0 bg-rose-500/20 flex items-center justify-center text-4xl font-bold text-rose-700";
+                mark.innerText = "❌";
+                selectedCard.appendChild(mark);
+
+                // Показываем правильный
+                document.querySelectorAll('#grid > div').forEach(card => {
+                    if (card.dataset.color === currentTarget.en) {
+                        card.className = "bg-emerald-100 border-2 border-emerald-500 rounded-2xl p-2.5 flex flex-col gap-2 shadow-sm relative";
+                        const correctMark = document.createElement('div');
+                        correctMark.className = "absolute inset-0 bg-emerald-500/20 flex items-center justify-center text-4xl font-bold text-emerald-700";
+                        correctMark.innerText = "✅";
+                        card.appendChild(correctMark);
+                    }
+                });
+
+                speak("Try again!");
+
+                const failedItem = roundQueue.shift();
+                roundQueue.push(failedItem);
+            }
+
+            setTimeout(() => {
+                startNextTask();
+            }, 1400);
+        }
+
+        function speakTargetColor() {
+            if (currentTarget) {
+                speak(currentTarget.en);
+            }
+        }
+
+        window.onload = setupRound;
+    </script>
+</body>
+</html>
