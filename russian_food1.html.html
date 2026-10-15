@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра: Список покупок</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e293b;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #f8fafc;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        /* Список покупок (вверху) */
+        .shopping-list-panel {
+            background: #fffbeb;
+            border: 3px solid #fcd34d;
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .list-title {
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: #78350f;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background-color: #fef3c7;
+            border: 2px dashed #f59e0b;
+            opacity: 0.5;
+            transition: all 0.4s ease;
+        }
+
+        .shopping-item .icon {
+            font-size: 22px;
+        }
+
+        .shopping-item .label {
+            font-size: 13px;
+            color: #92400e;
+            font-weight: bold;
+        }
+
+        .shopping-item .check {
+            display: none;
+            color: #16a34a;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Состояние: предмет найден */
+        .shopping-item.found {
+            opacity: 1;
+            background-color: #dcfce7;
+            border: 2px solid #22c55e;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+        }
+
+        .shopping-item.found .label {
+            color: #15803d;
+            text-decoration: line-through;
+        }
+
+        .shopping-item.found .check {
+            display: inline;
+        }
+
+        /* Игровое поле: жесткие размеры под картинку */
+        .game-board {
+            position: relative;
+            width: 650px;
+            height: 975px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 4px solid #ffffff;
+            background-color: #0f172a;
+            flex-shrink: 0;
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Интерактивные зоны поверх картинки */
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            background-color: transparent;
+            z-index: 5;
+        }
+
+        /* Подсветка при клике */
+        .hotspot.found-highlight {
+            animation: pulse-glow 0.5s ease;
+            background-color: rgba(34, 197, 94, 0.4) !important;
+            border: 2px solid #22c55e !important;
+            border-radius: 8px;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* Экран победы */
+        #win-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.95);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            text-align: center;
+            z-index: 20;
+            border: 2px solid #334155;
+        }
+
+        #win-message h2 {
+            color: #22c55e;
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        #win-message p {
+            color: #cbd5e1;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button.restart-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button.restart-btn:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🛒 Поиск продуктов на полках</h1>
+    <div class="subtitle">Найдите все товары из списка покупок на витрине магазина</div>
+
+    <!-- Список покупок -->
+    <div class="shopping-list-panel" id="shoppingList">
+        <div class="list-title">📋 Список покупок:</div>
+    </div>
+
+    <!-- Игровое поле -->
+    <div class="game-board" id="gameBoard">
+        <img src="https://i.postimg.cc/PqwPv9f2/polka2.png" alt="Витрина магазина" class="game-image">
+        
+        <!-- Зоны для каждого продукта (чай заменен на джем справа от хлеба) -->
+        <div class="hotspot" style="left: 35px; top: 435px; width: 60px; height: 135px;" onclick="itemFound('juice', this)" title="Сок"></div>
+        <div class="hotspot" style="left: 450px; top: 60px; width: 75px; height: 135px;" onclick="itemFound('jam', this)" title="Джем"></div>
+        <div class="hotspot" style="left: 545px; top: 125px; width: 75px; height: 100px;" onclick="itemFound('cheese', this)" title="Сыр"></div>
+        <div class="hotspot" style="left: 355px; top: 65px; width: 75px; height: 125px;" onclick="itemFound('bread', this)" title="Хлеб"></div>
+        <div class="hotspot" style="left: 35px; top: 635px; width: 155px; height: 175px;" onclick="itemFound('pizza', this)" title="Пицца"></div>
+        <div class="hotspot" style="left: 260px; top: 445px; width: 50px; height: 130px;" onclick="itemFound('water', this)" title="Вода"></div>
+        <div class="hotspot" style="left: 405px; top: 445px; width: 70px; height: 130px;" onclick="itemFound('milk', this)" title="Молоко"></div>
+        <div class="hotspot" style="left: 225px; top: 710px; width: 100px; height: 125px;" onclick="itemFound('icecream', this)" title="Мороженое"></div>
+
+        <!-- Экран победы -->
+        <div id="win-message">
+            <h2>🎉 Корзина собрана! 🎉</h2>
+            <p>Вы успешно нашли все продукты по списку.</p>
+            <button class="restart-btn" onclick="restartGame()">Собрать снова</button>
+        </div>
+    </div>
+
+    <script>
+        const itemsData = [
+            { id: 'juice', name: 'сок', icon: '🧃' },
+            { id: 'jam', name: 'джем', icon: '🍯' },
+            { id: 'cheese', name: 'сыр', icon: '🧀' },
+            { id: 'bread', name: 'хлеб', icon: '🍞' },
+            { id: 'pizza', name: 'пицца', icon: '🍕' },
+            { id: 'water', name: 'вода', icon: '💧' },
+            { id: 'milk', name: 'молоко', icon: '🥛' },
+            { id: 'icecream', name: 'мороженое', icon: '🍦' }
+        ];
+
+        let foundCount = 0;
+        let gameActive = true;
+
+        function speakWord(word) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'ru-RU';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function initShoppingList() {
+            const panel = document.getElementById('shoppingList');
+            panel.innerHTML = '<div class="list-title">📋 Список покупок:</div>';
+            
+            itemsData.forEach(item => {
+                const slot = document.createElement('div');
+                slot.classList.add('shopping-item');
+                slot.id = `slot-${item.id}`;
+                slot.innerHTML = `
+                    <span class="icon">${item.icon}</span>
+                    <span class="label">${item.name}</span>
+                    <span class="check">✔</span>
+                `;
+                panel.appendChild(slot);
+            });
+        }
+
+        function itemFound(itemId, hotspotElement) {
+            if (!gameActive || hotspotElement.classList.contains('found-highlight')) return;
+
+            const slot = document.getElementById(`slot-${itemId}`);
+            if (slot && !slot.classList.contains('found')) {
+                foundCount++;
+                gameActive = false;
+
+                const currentItem = itemsData.find(i => i.id === itemId);
+                if (currentItem) speakWord(currentItem.name);
+
+                hotspotElement.classList.add('found-highlight');
+
+                setTimeout(() => {
+                    slot.classList.add('found');
+                }, 300);
+
+                if (foundCount === itemsData.length) {
+                    setTimeout(() => {
+                        document.getElementById('win-message').style.display = 'block';
+                        speakWord('Ура! Все продукты по списку собраны!');
+                    }, 1200);
+                } else {
+                    setTimeout(() => {
+                        gameActive = true;
+                    }, 800);
+                }
+            }
+        }
+
+        function restartGame() {
+            foundCount = 0;
+            gameActive = true;
+            document.getElementById('win-message').style.display = 'none';
+
+            document.querySelectorAll('.hotspot').forEach(el => {
+                el.classList.remove('found-highlight');
+            });
+
+            initShoppingList();
+        }
+
+        initShoppingList();
+    </script>
+</body>
+</html>
