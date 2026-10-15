@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGO RED LIPS | Затишний куточок ігор</title>
-    <!-- Подключаем Tailwind CSS -->
+    <title>LOGO RED LIPS | Інтерактивні ігри</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Подключаем мягкий и уютный шрифт Nunito -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -16,132 +14,136 @@
             background: linear-gradient(135deg, #fffcf7 0%, #fef3c7 40%, #fae8ff 100%);
             background-attachment: fixed;
         }
-        img {
-            -webkit-user-drag: none;
-            user-drag: none;
-        }
+        img { -webkit-user-drag: none; user-drag: none; }
         .cozy-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(10px);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .cozy-card:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
+        .cozy-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
-    <!-- Шапка сайта с твоим логотипом -->
-    <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            
-            <!-- Логотип и название в шапке -->
-            <div class="flex items-center space-x-3">
+    <!-- Шапка -->
+    <header class="py-5 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
                 <img src="logo.jpg" alt="Logo Red Lips" class="w-12 h-12 rounded-full object-cover border-2 border-rose-300 shadow-md">
                 <div>
-                    <h1 class="text-xl font-black text-amber-900 tracking-wide">LOGO RED LIPS</h1>
-                    <p class="text-xs text-amber-700/80 font-bold">Логопедичні та розвиваючі ігри</p>
+                    <h1 class="font-black text-amber-950 text-lg leading-none">LOGO RED LIPS</h1>
+                    <p class="text-xs text-amber-800/80 mt-1 font-bold">@logoredlips</p>
                 </div>
             </div>
-            
-            <!-- Соцсети -->
-            <div class="flex items-center gap-2">
-                <a href="https://t.me/logoredlips" target="_blank" rel="noopener noreferrer" 
-                   class="flex items-center gap-2 bg-sky-100/80 hover:bg-sky-200/90 text-sky-800 font-bold px-4 py-2 rounded-full transition shadow-sm border border-sky-200/80 text-xs sm:text-sm">
-                    <span>💬 Telegram</span>
-                </a>
-                <a href="https://www.tiktok.com/@logoredlips" target="_blank" rel="noopener noreferrer" 
-                   class="flex items-center gap-2 bg-rose-100/80 hover:bg-rose-200/90 text-rose-900 font-bold px-4 py-2 rounded-full transition shadow-sm border border-rose-200/80 text-xs sm:text-sm">
-                    <span>🎵 TikTok</span>
-                </a>
-            </div>
-
+            <span class="text-xs font-black bg-rose-100 text-rose-800 px-3.5 py-1.5 rounded-full border border-rose-200 shadow-sm">
+                🎓 Авторські ігри
+            </span>
         </div>
     </header>
 
-    <!-- Главный контент -->
-    <main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full">
-        
-        <div class="text-center mb-12">
-            <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-4 py-1.5 rounded-full border border-amber-300/50 inline-block mb-3">
-                🧸 Простір для занять та розвитку мовлення
-            </span>
-            <h2 class="text-4xl font-extrabold text-amber-950 mb-3">Оберіть казковий напрямок</h2>
-            <p class="text-amber-800/80 max-w-lg mx-auto font-medium text-base">
-                Авторські інтерактивні ігри для автоматизації звуків, вивчення мов та веселих занять.
+    <!-- Головний контент -->
+    <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full space-y-12">
+
+        <!-- Привітання -->
+        <div class="text-center max-w-2xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-amber-950 mb-3">Інтерактивний світ розвитку</h2>
+            <p class="text-amber-800/80 text-sm sm:text-base font-medium">
+                Обирайте потрібний напрямок: вивчення мов та лексики або логопедичні ігри для автоматизації звуків.
             </p>
         </div>
 
-        <!-- 3 Сектора -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <!-- Сектор 1: Українська мова -->
-            <div class="cozy-card rounded-3xl p-7 border border-amber-200/70 shadow-xl shadow-amber-900/5 flex flex-col justify-between">
-                <div>
-                    <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-3xl mb-5 shadow-inner">
-                        🌻
-                    </div>
-                    <h3 class="text-2xl font-black text-amber-950 mb-2">Українська мова</h3>
-                    <p class="text-amber-800/90 text-sm leading-relaxed mb-6 font-medium">
-                        Логопедичні дублі, автоматизація звуків, розвиток зв'язного мовлення та цікава лексика.
-                    </p>
-                </div>
-                <a href="ukrainian.html" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-lg shadow-amber-500/30">
-                    Відкрити розділ →
-                </a>
+        <!-- ================= РОЗДІЛ 1: ЛЕКСИКА ТА МОВИ ================= -->
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-2xl">🌍</span>
+                <h3 class="text-xl font-extrabold text-amber-950">Развивающие разделы / Навчання мов</h3>
             </div>
 
-            <!-- Сектор 2: English -->
-            <div class="cozy-card rounded-3xl p-7 border border-emerald-200/70 shadow-xl shadow-emerald-900/5 flex flex-col justify-between">
-                <div>
-                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-3xl mb-5 shadow-inner">
-                        🎈
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- English -->
+                <a href="english.html" class="cozy-card rounded-3xl p-6 border border-emerald-200/80 shadow-lg shadow-emerald-900/5 block group">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-2xl">🎈</span>
+                        <span class="text-xs font-black bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">English</span>
                     </div>
-                    <h3 class="text-2xl font-black text-emerald-950 mb-2">English</h3>
-                    <p class="text-emerald-800/90 text-sm leading-relaxed mb-6 font-medium">
-                        Англійська мова для малюків: кольори, цифри, граматика та перші слова в грі.
-                    </p>
-                </div>
-                <a href="english.html" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-lg shadow-emerald-500/30">
-                    Перейти до ігор →
+                    <h4 class="text-lg font-black text-amber-950 mb-1 group-hover:text-emerald-700 transition">English Corner</h4>
+                    <p class="text-amber-800/80 text-xs font-medium mb-4">Colors, Vocabulary, Simple games</p>
+                    <span class="text-xs font-bold text-emerald-600 flex items-center gap-1">Перейти →</span>
+                </a>
+
+                <!-- Українська мова -->
+                <a href="ukrainian.html" class="cozy-card rounded-3xl p-6 border border-sky-200/80 shadow-lg shadow-sky-900/5 block group">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-2xl">🩵</span>
+                        <span class="text-xs font-black bg-sky-100 text-sky-800 px-3 py-1 rounded-full">Українська</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-1 group-hover:text-sky-700 transition">Українська мова</h4>
+                    <p class="text-amber-800/80 text-xs font-medium mb-4">Сім'я, Їжа, Іграшки, Лексика</p>
+                    <span class="text-xs font-bold text-sky-600 flex items-center gap-1">Перейти →</span>
+                </a>
+
+                <!-- Русский язык -->
+                <a href="russian.html" class="cozy-card rounded-3xl p-6 border border-amber-200/80 shadow-lg shadow-amber-900/5 block group">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-2xl">🌟</span>
+                        <span class="text-xs font-black bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Русский</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-1 group-hover:text-amber-700 transition">Русский язык</h4>
+                    <p class="text-amber-800/80 text-xs font-medium mb-4">Семья, Еда, Развитие речи</p>
+                    <span class="text-xs font-bold text-amber-600 flex items-center gap-1">Перейти →</span>
                 </a>
             </div>
+        </section>
 
-            <!-- Сектор 3: Русский язык -->
-            <div class="cozy-card rounded-3xl p-7 border border-purple-200/70 shadow-xl shadow-purple-900/5 flex flex-col justify-between">
+        <!-- ================= РОЗДІЛ 2: ЛОГОПЕДІЯ (АВТОМАТИЗАЦІЯ ЗВУКІВ) ================= -->
+        <section class="bg-rose-50/60 rounded-3xl p-6 sm:p-8 border border-rose-200/80 shadow-sm">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-3xl">🗣️</span>
                 <div>
-                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-3xl mb-5 shadow-inner">
-                        🧩
-                    </div>
-                    <h3 class="text-2xl font-black text-purple-950 mb-2">Русский язык</h3>
-                    <p class="text-purple-800/90 text-sm leading-relaxed mb-6 font-medium">
-                        Архів та бібліотека існуючих розвиваючих ігор та вправ.
-                    </p>
+                    <h3 class="text-xl font-extrabold text-amber-950">Логопедичний кабінет</h3>
+                    <p class="text-xs text-amber-800/80 font-medium">Автоматизація та диференціація звуків по окремих секціях</p>
                 </div>
-                <a href="russian.html" class="block text-center w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3.5 px-4 rounded-2xl transition shadow-lg shadow-purple-500/30">
-                    Відкрити розділ →
-                </a>
             </div>
 
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Українська логопедія -->
+                <a href="logoped_ua.html" class="cozy-card rounded-3xl p-6 border border-rose-200/80 shadow-md block group">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-rose-100 text-rose-800 px-3 py-1 rounded-full">Звуковимова</span>
+                        <span class="text-xl">🇺🇦</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-1 group-hover:text-rose-600 transition">Українська логопедія</h4>
+                    <p class="text-amber-800/80 text-xs font-medium mb-4">
+                        Секції звуків [Р], [Ж], [Ш], [З], а також диференціація звуків.
+                    </p>
+                    <span class="text-xs font-bold text-rose-600 flex items-center gap-1">Відкрити кабінет →</span>
+                </a>
+
+                <!-- Русская логопедия -->
+                <a href="logoped_ru.html" class="cozy-card rounded-3xl p-6 border border-rose-200/80 shadow-md block group">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-rose-100 text-rose-800 px-3 py-1 rounded-full">Звукопроизношение</span>
+                        <span class="text-xl">🌐</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-1 group-hover:text-rose-600 transition">Русская логопедия</h4>
+                    <p class="text-amber-800/80 text-xs font-medium mb-4">
+                        Секции звуков [Р], [Ш], [Ж], а также дифференциация звуков.
+                    </p>
+                    <span class="text-xs font-bold text-rose-600 flex items-center gap-1">Открыть кабинет →</span>
+                </a>
+            </div>
+        </section>
 
     </main>
 
-    <!-- Подвал -->
+    <!-- Підвал -->
     <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
-        <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
-            <p class="font-bold text-amber-900">З любов'ю до дітей та навчання 💛</p>
-        </div>
+        <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
     </footer>
 
-    <!-- Защита -->
     <script>
         document.addEventListener('keydown', function (e) {
-            if (e.keyCode === 123 || 
-                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
                 e.preventDefault();
             }
         });
