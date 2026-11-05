@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логика погоды: Причина и следствие</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        body {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://i.postimg.cc/0NMN68Ss/pogoda.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-4 select-none font-sans text-slate-800">
+
+    <!-- Шапка с прогрессом -->
+    <div id="header-container" class="bg-white/90 backdrop-blur px-6 py-3 rounded-2xl shadow-md border-2 border-sky-200 flex justify-between items-center w-full max-w-md hidden">
+        <div class="flex items-center gap-2">
+            <button onclick="goHome()" class="bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1 rounded-xl text-xs font-bold cursor-pointer">🏠 Меню</button>
+            <h1 class="text-sm font-bold text-sky-800" id="round-title">Игра</h1>
+        </div>
+        <div class="font-bold text-slate-700 text-xs">⭐ Очки: <span id="stars" class="text-sky-600">0</span> | Осталось: <span id="progress-text">0</span></div>
+    </div>
+
+    <!-- Основное игровое поле -->
+    <div class="w-full max-w-md flex flex-col gap-4 my-auto">
+        
+        <!-- ГЛАВНОЕ МЕНЮ -->
+        <div id="round-menu" class="bg-white/95 backdrop-blur border-4 border-sky-300 rounded-3xl p-6 shadow-xl flex flex-col items-center gap-4 text-center">
+            <div class="text-3xl">🧩☀️🌧️⛸️</div>
+            <h2 class="text-xl font-black text-sky-900">Логические цепочки погоды</h2>
+            <p class="text-xs text-slate-600">Что происходит в результате? Выберите режим:</p>
+            
+            <div class="flex flex-col gap-2.5 w-full">
+                <!-- РАУНД 1 -->
+                <button onclick="startMode(1)" class="bg-sky-50 hover:bg-sky-100 border-2 border-sky-300 text-sky-900 font-bold py-3 px-4 rounded-2xl text-xs cursor-pointer transition shadow-xs flex flex-col items-center gap-1">
+                    <span class="text-sm font-black">👂 Раунд 1: Слышим фразу-следствие ➔ Ищем причину</span>
+                    <span class="text-xs text-slate-600 font-normal">Например: слышим «На улице скользко» ➔ ищем гололёд</span>
+                </button>
+
+                <!-- РАУНД 2 -->
+                <button onclick="startMode(2)" class="bg-sky-50 hover:bg-sky-100 border-2 border-sky-300 text-sky-900 font-bold py-3 px-4 rounded-2xl text-xs cursor-pointer transition shadow-xs flex flex-col items-center gap-1">
+                    <span class="text-sm font-black">🗣️ Раунд 2: Видим картинку ➔ Выбираем фразу-следствие</span>
+                    <span class="text-xs text-slate-600 font-normal">Например: видим дождь ➔ выбираем «На улице мокро»</span>
+                </button>
+
+                <!-- ФИНАЛЬНЫЙ МИКС -->
+                <button onclick="startMode('mix')" class="bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-black py-3 px-4 rounded-2xl shadow cursor-pointer text-sm transition flex items-center justify-center gap-2">
+                    🏆 Большой Финальный Микс (Вразброс!)
+                </button>
+            </div>
+        </div>
+
+        <!-- ИГРОВОЙ ЭКРАН -->
+        <div id="game-container" class="bg-white/95 backdrop-blur border-4 border-sky-300 rounded-3xl p-6 shadow-xl flex flex-col items-center gap-5 text-center hidden">
+            <div id="task-box" class="w-full bg-sky-50 border-2 border-sky-200 rounded-2xl p-5 flex flex-col items-center gap-3">
+                <!-- Динамическое задание -->
+            </div>
+            <div class="w-full" id="options-grid">
+                <!-- Варианты ответов -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Экран победы -->
+    <div id="win" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm text-center shadow-2xl border-4 border-sky-400 flex flex-col items-center gap-4">
+            <div class="text-7xl animate-bounce">🏆</div>
+            <h2 class="text-2xl font-bold text-sky-700">Великолепно!</h2>
+            <p class="text-slate-600 text-sm">Ты отлично выстроил все логические цепочки!</p>
+            <button onclick="goHome()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-xl shadow cursor-pointer text-base w-full">
+                В меню 🏠
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // База логических пар: Картинка (Причина) <-> Фраза (Следствие / Описание)
+        const logicalPairs = [
+            { icon: "☀️", phrase: "Сегодня тепло", hint: "Светит солнце" },
+            { icon: "🌧️", phrase: "На улице мокро", hint: "Идёт дождь" },
+            { icon: "🧊⛸️", phrase: "На улице скользко", hint: "На дороге гололёд" },
+            { icon: "❄️", phrase: "Сегодня холодно", hint: "Идёт снег" },
+            { icon: "🥵", phrase: "На улице жарко", hint: "Палит солнце" },
+            { icon: "💨", phrase: "Гнут деревья ветром", hint: "На улице ветрено" },
+            { icon: "🌫️", phrase: "Ничего не видно", hint: "На улице туман" },
+            { icon: "⛈️", phrase: "Нужен зонт и осторожность", hint: "Гремит гроза" },
+            { icon: "☁️", "phrase": "Солнца не видно", hint: "На небе облачно" }
+        ];
+
+        let currentMode = 1; 
+        let roundQueue = [];
+        let currentTarget = null;
+        let stars = 0;
+        let isBlocked = false;
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ru-RU';
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                } catch(e) {
+                    console.log("Speech error:", e);
+                }
+            }
+        }
+
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function goHome() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('header-container').classList.add('hidden');
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('win').classList.add('hidden');
+            document.getElementById('round-menu').classList.remove('hidden');
+        }
+
+        function startMode(mode) {
+            currentMode = mode;
+            stars = 0;
+            document.getElementById('round-menu').classList.add('hidden');
+            document.getElementById('header-container').classList.remove('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            
+            roundQueue = shuffle([...logicalPairs]);
+            
+            speak("Послушай и найди связь");
+            loadNextTask();
+        }
+
+        function loadNextTask() {
+            if (roundQueue.length === 0) {
+                document.getElementById('game-container').classList.add('hidden');
+                document.getElementById('header-container').classList.add('hidden');
+                document.getElementById('win').classList.remove('hidden');
+                if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+                speak("Ура! Логическая задачка решена на отлично!");
+                return;
+            }
+
+            isBlocked = false;
+            currentTarget = roundQueue[0];
+
+            let titleName = currentMode === 'mix' ? "Финальный Микс" : (currentMode === 1 ? "Раунд 1 (Слушаем)" : "Раунд 2 (Говорим)");
+            document.getElementById('round-title').innerText = `🧩 ${titleName}`;
+            document.getElementById('progress-text').innerText = roundQueue.length;
+            document.getElementById('stars').innerText = stars;
+
+            let effectiveMode = currentMode;
+            if (currentMode === 'mix') {
+                effectiveMode = Math.random() < 0.5 ? 1 : 2;
+            }
+
+            if (effectiveMode === 1) {
+                renderRound1();
+            } else {
+                renderRound2();
+            }
+        }
+
+        // --- РАУНД 1: Слышим фразу-следствие ➔ Ищем картинку-причину ---
+        function renderRound1() {
+            const taskBox = document.getElementById('task-box');
+            taskBox.innerHTML = `
+                <div class="text-xs font-bold text-sky-800 uppercase tracking-wide">Какая причина подходит к фразе:</div>
+                <button onclick="speak('${currentTarget.phrase.replace(/'/g, "\\'")}')" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-3 rounded-2xl text-sm shadow cursor-pointer transition flex items-center gap-2">
+                    🔊 Послушать: "${currentTarget.phrase}"
+                </button>
+            `;
+            speak(currentTarget.phrase);
+
+            const grid = document.getElementById('options-grid');
+            grid.className = "grid grid-cols-2 gap-3";
+            grid.innerHTML = "";
+
+            let options = [currentTarget];
+            let others = logicalPairs.filter(item => item.phrase !== currentTarget.phrase);
+            options = options.concat(shuffle(others).slice(0, 3));
+            options = shuffle(options);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "h-28 bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition shadow-sm relative overflow-hidden p-2";
+                btn.dataset.phrase = opt.phrase;
+                btn.innerHTML = `
+                    <span class="text-4xl">${opt.icon}</span>
+                    <span class="text-[10px] text-slate-500 mt-1">${opt.hint}</span>
+                    <div class="status-overlay absolute inset-0 hidden items-center justify-center text-4xl bg-black/10"></div>
+                `;
+                btn.onclick = () => checkAnswerRound1(btn, opt.phrase === currentTarget.phrase);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswerRound1(btnElement, isCorrect) {
+            if (isBlocked) return;
+            isBlocked = true;
+
+            const overlay = btnElement.querySelector('.status-overlay');
+            overlay.classList.remove('hidden');
+
+            if (isCorrect) {
+                stars += 1;
+                document.getElementById('stars').innerText = stars;
+                overlay.innerText = "✅";
+                speak("Верно!");
+                if (typeof confetti === 'function') confetti({ particleCount: 25, spread: 30, origin: { y: 0.7 } });
+                roundQueue.shift();
+            } else {
+                overlay.innerText = "❌";
+                speak("Попробуй другую картинку!");
+
+                document.querySelectorAll('#options-grid button').forEach(b => {
+                    if (b.dataset.phrase === currentTarget.phrase) {
+                        b.querySelector('.status-overlay').innerText = "✅";
+                        b.querySelector('.status-overlay').classList.remove('hidden');
+                    }
+                });
+
+                const failed = roundQueue.shift();
+                roundQueue.push(failed);
+            }
+
+            setTimeout(() => {
+                loadNextTask();
+            }, 1400);
+        }
+
+        // --- РАУНД 2: Видим картинку ➔ Выбираем фразу на слух ---
+        function renderRound2() {
+            const taskBox = document.getElementById('task-box');
+            taskBox.innerHTML = `
+                <div class="text-xs font-bold text-sky-800 uppercase tracking-wide">Посмотри на картинку и выбери логичную фразу:</div>
+                <div class="text-6xl my-1">${currentTarget.icon}</div>
+                <div class="text-xs text-sky-700 font-semibold">(${currentTarget.hint})</div>
+            `;
+
+            const grid = document.getElementById('options-grid');
+            grid.className = "flex flex-col gap-2.5 w-full";
+            grid.innerHTML = "";
+
+            let options = [currentTarget];
+            let others = logicalPairs.filter(item => item.phrase !== currentTarget.phrase);
+            options = options.concat(shuffle(others).slice(0, 3));
+            options = shuffle(options);
+
+            options.forEach((opt, index) => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-sky-50/60 border border-sky-200 rounded-2xl p-3 shadow-xs";
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-sky-200 text-sky-900 font-bold text-xs flex items-center justify-center">${index + 1}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="speak('${opt.phrase.replace(/'/g, "\\'")}')" class="bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-2 rounded-xl text-xs cursor-pointer transition font-bold shadow-xs flex items-center gap-1">
+                            🔊 Слушать
+                        </button>
+                        <button onclick="checkAnswerRound2(${opt.phrase === currentTarget.phrase}, this, '${opt.phrase.replace(/'/g, "\\'")}')" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition shadow">
+                            Выбрать ✨
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(row);
+            });
+        }
+
+        function checkAnswerRound2(isCorrect, btnElement, optPhrase) {
+            if (isBlocked) return;
+            isBlocked = true;
+
+            const rowElement = btnElement.closest('div.bg-sky-50\\/60');
+
+            if (isCorrect) {
+                stars += 1;
+                document.getElementById('stars').innerText = stars;
+                rowElement.className = "flex items-center justify-between bg-emerald-100 border border-emerald-500 rounded-2xl p-3 shadow-xs relative";
+                btnElement.className = "bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-xl";
+                btnElement.innerText = "Верно! ✔️";
+                speak(`Правильно! ${optPhrase}`);
+                if (typeof confetti === 'function') confetti({ particleCount: 25, spread: 30, origin: { y: 0.7 } });
+                roundQueue.shift();
+            } else {
+                rowElement.className = "flex items-center justify-between bg-rose-100 border border-rose-400 rounded-2xl p-3 shadow-xs relative";
+                btnElement.className = "bg-rose-500 text-white font-bold text-xs px-4 py-2 rounded-xl";
+                btnElement.innerText = "Ошибка ❌";
+                speak("Неправильно, послушай другой вариант");
+
+                const failed = roundQueue.shift();
+                roundQueue.push(failed);
+            }
+
+            setTimeout(() => {
+                loadNextTask();
+            }, 1400);
+        }
+    </script>
+</body>
+</html>
