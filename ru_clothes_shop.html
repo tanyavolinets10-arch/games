@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин одежды: Список покупок — Русский язык</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+        }
+        .shop-hotspot {
+            position: absolute;
+            cursor: pointer;
+            border: 2px dashed transparent;
+            background-color: transparent;
+            transition: border-color 0.1s, background-color 0.1s;
+        }
+        .shop-hotspot:hover {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-3 select-none font-sans text-slate-800">
+
+    <!-- Верхняя панель управления -->
+    <div id="header-container" class="bg-white/95 backdrop-blur shadow-md border-2 border-emerald-300 px-5 py-2.5 rounded-2xl flex justify-between items-center w-full max-w-4xl z-20 hidden">
+        <div class="flex items-center gap-2">
+            <button onclick="goHome()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">🏠 Меню</button>
+            <h1 class="text-sm font-bold text-emerald-800">Магазин одежды</h1>
+        </div>
+        <div id="game-stats" class="font-bold text-slate-700 text-xs">⭐ Баллы: <span id="stars" class="text-emerald-600">0</span> | Задание: <span id="progress-text">1 / 5</span></div>
+    </div>
+
+    <!-- Основное игровое поле -->
+    <div class="w-full max-w-4xl flex flex-col items-center gap-3 my-auto">
+        
+        <!-- ГЛАВНОЕ МЕНЮ -->
+        <div id="round-menu" class="bg-white border-4 border-emerald-400 rounded-3xl p-6 shadow-2xl flex flex-col items-center gap-5 text-center max-w-md w-full">
+            <div class="text-4xl">🏬🛒👗</div>
+            <h2 class="text-xl font-black text-emerald-900">Магазин Одежды</h2>
+            <p class="text-xs text-slate-600">Изучаем русский язык по витрине магазина:</p>
+            
+            <div class="flex flex-col gap-3 w-full">
+                <button onclick="startRound(1)" class="bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 text-emerald-900 font-bold p-3.5 rounded-2xl shadow-sm cursor-pointer transition flex flex-col items-center gap-0.5">
+                    <span class="text-sm font-black">🛒 Режим 1: Список покупок</span>
+                    <span class="text-xs text-slate-600 font-normal">Собери заказ покупателя в магазине</span>
+                </button>
+
+                <button onclick="startRound(2)" class="bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-300 text-emerald-900 font-bold p-3.5 rounded-2xl shadow-sm cursor-pointer transition flex flex-col items-center gap-0.5">
+                    <span class="text-sm font-black">👂 Режим 2: Найди на слух</span>
+                    <span class="text-xs text-slate-600 font-normal">Слушай подсказку и кликай на нужную вещь</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ИГРОВОЙ ЭКРАН -->
+        <div id="game-container" class="bg-white border-4 border-emerald-300 rounded-3xl p-4 shadow-2xl flex flex-col items-center gap-3 w-full hidden relative">
+            
+            <!-- Панель задания -->
+            <div id="task-panel" class="w-full bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 flex items-center justify-between">
+                <!-- Динамическое задание -->
+            </div>
+
+            <!-- Область с фоном магазина и кликабельными зонами -->
+            <div id="image-wrapper" class="relative w-full max-w-3xl rounded-2xl overflow-hidden border-2 border-emerald-200 shadow-inner bg-slate-100">
+                <img id="shop-img" src="https://i.postimg.cc/QC0rQY7j/odag-magazyn.webp" alt="Магазин одежды" class="w-full h-auto block select-none pointer-events-none">
+                <div id="hotspots-layer" class="absolute inset-0"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Экран победы -->
+    <div id="win" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm text-center shadow-2xl border-4 border-emerald-400 flex flex-col items-center gap-4">
+            <div class="text-7xl animate-bounce">🏆</div>
+            <h2 class="text-2xl font-bold text-emerald-700">Отлично! Покупки собраны!</h2>
+            <p class="text-slate-600 text-sm">Ты прекрасно справился со всеми заданиями в магазине!</p>
+            <button onclick="goHome()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow cursor-pointer text-base w-full">
+                В меню 🏠
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const shopItems = [
+            { id: "botinki", name: "ботинки", accusative: "ботинки", x: 10.3, y: 14, w: 9.7, h: 15 },
+            { id: "rizinovye-sapogi", name: "резиновые сапоги", accusative: "резиновые сапоги", x: 23.5, y: 6.2, w: 8, h: 22.5 },
+            { id: "krosovki", name: "кеды", accusative: "кеды", x: 33.8, y: 17.7, w: 9.2, h: 13.5 },
+            { id: "shlyapa", name: "шляпа", accusative: "шляпу", x: 49.8, y: 7.5, w: 12.5, h: 19 },
+            { id: "ochki", name: "очки", accusative: "очки", x: 64.8, y: 23, w: 6, h: 6.5 },
+            { id: "noski", name: "носки", accusative: "носки", x: 75, y: 13.8, w: 8.2, h: 15.5 },
+            { id: "tapki", name: "тапки", accusative: "тапки", x: 84.9, y: 12.1, w: 7.2, h: 16 },
+            { id: "sapka", name: "шапка", accusative: "шапку", x: 4.3, y: 39.1, w: 6.5, h: 17.5 },
+            { id: "sarf", name: "шарф", accusative: "шарф", x: 12.9, y: 44.6, w: 5.8, h: 28.5 },
+            { id: "dozdevik", name: "дождевик", accusative: "дождевик", x: 18.8, y: 46.5, w: 7.2, h: 35.5 },
+            { id: "kurtka", name: "куртка", accusative: "куртку", x: 26.8, y: 45, w: 7.2, h: 34.5 },
+            { id: "palto", name: "пальто", accusative: "пальто", x: 35.3, y: 42.5, w: 7, h: 40 },
+            { id: "sviter", name: "свитер", accusative: "свитер", x: 45.2, y: 40.2, w: 10.8, h: 35.5 },
+            { id: "kofta", name: "кофта", accusative: "кофту", x: 56.1, y: 39.3, w: 6.5, h: 33 },
+            { id: "futbolka", name: "футболка", accusative: "футболку", x: 62.2, y: 38, w: 7, h: 33.5 },
+            { id: "majka", name: "майка", accusative: "майку", x: 69.8, y: 39.5, w: 6, h: 22 },
+            { id: "ubka", name: "юбка", accusative: "юбку", x: 67.9, y: 64.9, w: 8.3, h: 21.5 },
+            { id: "stany", name: "штаны", accusative: "штаны", x: 78.3, y: 51.5, w: 9.8, h: 39 },
+            { id: "sorty", name: "шорты", accusative: "шорты", x: 76.3, y: 40.8, w: 6, h: 13.5 },
+            { id: "plat'e", name: "платье", accusative: "платье", x: 88.4, y: 44.7, w: 8.3, h: 42.5 }
+        ];
+
+        // Разрешенные вещи по вашему списку
+        const allowedIds = [
+            "kofta", "shlyapa", "krosovki", "stany", "palto", 
+            "kurtka", "futbolka", "majka", "sorty", 
+            "rizinovye-sapogi", "botinki", "noski", "plat'e"
+        ];
+        
+        const activeItems = shopItems.filter(item => allowedIds.includes(item.id));
+
+        let currentRoundNum = 1;
+        let tasksList = [];
+        let taskIndex = 0;
+        let currentTaskData = null;
+        let stars = 0;
+        let isBlocked = false;
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ru-RU';
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                } catch(e) {}
+            }
+        }
+
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function goHome() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('header-container').classList.add('hidden');
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('win').classList.add('hidden');
+            document.getElementById('round-menu').classList.remove('hidden');
+        }
+
+        function startRound(roundNum) {
+            currentRoundNum = roundNum;
+            stars = 0;
+            taskIndex = 0;
+            document.getElementById('round-menu').classList.add('hidden');
+            document.getElementById('header-container').classList.remove('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+
+            if (roundNum === 1) {
+                tasksList = [
+                    { type: 'list', items: getRandomItems(2) },
+                    { type: 'list', items: getRandomItems(2) },
+                    { type: 'list', items: getRandomItems(3) },
+                    { type: 'list', items: getRandomItems(3) }
+                ];
+            } else {
+                let shuffled = shuffle([...activeItems]);
+                tasksList = shuffled.slice(0, 6).map(item => ({ type: 'single', target: item }));
+            }
+
+            speak("Добро пожаловать в магазин одежды!");
+            loadTask();
+        }
+
+        function getRandomItems(count) {
+            return shuffle([...activeItems]).slice(0, count);
+        }
+
+        function loadTask() {
+            if (taskIndex >= tasksList.length) {
+                document.getElementById('game-container').classList.add('hidden');
+                document.getElementById('header-container').classList.add('hidden');
+                document.getElementById('win').classList.remove('hidden');
+                speak("Ура! Все покупки успешно завершены!");
+                if (typeof confetti === 'function') confetti();
+                return;
+            }
+
+            isBlocked = false;
+            currentTaskData = tasksList[taskIndex];
+            document.getElementById('progress-text').innerText = `${taskIndex + 1} / ${tasksList.length}`;
+            document.getElementById('stars').innerText = stars;
+
+            renderHotspots();
+
+            const taskPanel = document.getElementById('task-panel');
+
+            if (currentTaskData.type === 'list') {
+                let displayNames = currentTaskData.items.map(i => i.accusative).join(', ');
+                let speechNames = currentTaskData.items.map(i => i.accusative).join(', ');
+                currentTaskData.remaining = [...currentTaskData.items];
+                
+                taskPanel.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl">🛒</div>
+                        <div>
+                            <div class="text-xs font-bold text-emerald-900 uppercase">Список покупок:</div>
+                            <div class="text-sm font-black text-slate-800 capitalize" id="shopping-list-text">Купи: ${displayNames}</div>
+                        </div>
+                    </div>
+                    <button onclick="speak('Нужно купить: ${speechNames}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-2 rounded-xl cursor-pointer shadow">
+                        🔊 Повторить список
+                    </button>
+                `;
+                speak(`Внимание, список покупок. Нужно купить: ${speechNames}`);
+            } else {
+                taskPanel.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl">👂</div>
+                        <div>
+                            <div class="text-xs font-bold text-emerald-900 uppercase">Задание на слух:</div>
+                            <div class="text-sm font-black text-emerald-700">Найди нужный предмет на витрине</div>
+                        </div>
+                    </div>
+                    <button onclick="speak('Найдите: ${currentTaskData.target.name}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-2 rounded-xl cursor-pointer shadow">
+                        🔊 Послушать
+                    </button>
+                `;
+                speak(`Найдите: ${currentTaskData.target.name}`);
+            }
+        }
+
+        function renderHotspots() {
+            const layer = document.getElementById('hotspots-layer');
+            layer.innerHTML = "";
+
+            shopItems.forEach((item) => {
+                const hotspot = document.createElement('div');
+                hotspot.className = "shop-hotspot";
+                hotspot.style.left = `${item.x}%`;
+                hotspot.style.top = `${item.y}%`;
+                hotspot.style.width = `${item.w}%`;
+                hotspot.style.height = `${item.h}%`;
+                
+                hotspot.onclick = () => handleItemClick(item);
+                layer.appendChild(hotspot);
+            });
+        }
+
+        function handleItemClick(clickedItem) {
+            if (isBlocked) return;
+
+            if (currentTaskData.type === 'list') {
+                const index = currentTaskData.remaining.findIndex(i => i.id === clickedItem.id);
+                
+                if (index !== -1) {
+                    currentTaskData.remaining.splice(index, 1);
+                    stars += 1;
+                    document.getElementById('stars').innerText = stars;
+                    speak(`Верно, ${clickedItem.name}!`);
+
+                    if (currentTaskData.remaining.length === 0) {
+                        isBlocked = true;
+                        speak("Заказ собран!");
+                        setTimeout(() => {
+                            taskIndex++;
+                            loadTask();
+                        }, 1400);
+                    } else {
+                        let displayNames = currentTaskData.remaining.map(i => i.accusative).join(', ');
+                        document.getElementById('shopping-list-text').innerText = `Осталось купить: ${displayNames}`;
+                    }
+                } else {
+                    speak("Эта вещь не нужна в списке. Ищи нужную!");
+                }
+            } else {
+                if (clickedItem.id === currentTaskData.target.id) {
+                    isBlocked = true;
+                    stars += 1;
+                    document.getElementById('stars').innerText = stars;
+                    speak(`Правильно! Это ${clickedItem.name}`);
+
+                    setTimeout(() => {
+                        taskIndex++;
+                        loadTask();
+                    }, 1400);
+                } else {
+                    speak("Неправильно, это другой предмет. Попробуй ещё раз!");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
