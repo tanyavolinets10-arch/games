@@ -35,7 +35,6 @@
                     <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
                     <span class="font-black text-amber-950 text-sm hidden sm:inline">LOGO RED LIPS</span>
                 </div>
-                <!-- Переключатель языка интерфейса -->
                 <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
                     <a href="russian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Русский</a>
                     <a href="ukrainian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Українська</a>
@@ -51,10 +50,9 @@
                 🎈 English Corner
             </span>
             <h2 class="text-3xl font-extrabold text-amber-950">English Learning Games</h2>
-            <p class="text-amber-800/80 text-sm mt-1">Interactive games and exercises for learning English in a fun way.</p>
+            <p class="text-amber-800/80 text-sm mt-1">Interactive games and exercises for learning English.</p>
         </div>
 
-        <!-- Сюда скрипт автоматически вставит карточки на английском -->
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
@@ -62,11 +60,13 @@
         <p class="font-semibold">© Author materials LOGO RED LIPS (@logoredlips)</p>
     </footer>
 
-    <!-- Подключаем данные и скрипт генерации -->
     <script src="games-data.js"></script>
     <script>
         const container = document.getElementById('games-container');
-        gamesCatalog.forEach(game => {
+        // Фильтруем только игры для изучения английского (track === 'en')
+        const enGames = gamesCatalog.filter(game => game.track === 'en');
+        
+        enGames.forEach(game => {
             const card = document.createElement('div');
             card.className = "cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between";
             card.innerHTML = `
