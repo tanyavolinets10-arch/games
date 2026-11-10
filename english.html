@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Games | LOGO RED LIPS</title>
+    <title>english | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,128 +24,54 @@
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
-    <!-- Шапка без ссылок-переходов! Кнопки только перерабатывают текст -->
     <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="index.html" id="btn-home" class="bg-amber-100/80 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
-                ← На главную
+            <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
+                ← На головну
             </a>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
-                    <span class="font-black text-amber-900 text-sm hidden sm:inline">LOGO RED LIPS</span>
-                </div>
-                
-                <!-- Настоящий переключатель языка (НЕ переходит на другие страницы) -->
-                <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
-                    <button type="button" onclick="translatePage('ru')" id="lang-btn-ru" class="px-3 py-1.5 rounded-xl transition">Русский</button>
-                    <button type="button" onclick="translatePage('uk')" id="lang-btn-uk" class="px-3 py-1.5 rounded-xl transition">Українська</button>
-                    <button type="button" onclick="translatePage('en')" id="lang-btn-en" class="px-3 py-1.5 rounded-xl transition">English</button>
-                </div>
-            </div>
+            <span class="font-black text-amber-950 text-sm">LOGO RED LIPS</span>
         </div>
     </header>
 
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
-            <span id="page-badge" class="bg-emerald-200/60 text-emerald-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🎈 English Corner
+            <span class="bg-emerald-200/60 text-emerald-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
+                🎈 Напрямок
             </span>
-            <h2 id="page-heading" class="text-3xl font-extrabold text-amber-950">Игры на английском</h2>
-            <p id="page-subheading" class="text-amber-800/80 text-sm mt-1">Остаёмся в этом разделе, меняются только тексты.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">english</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Ігри для вивчення англійської мови з переліком слів.</p>
         </div>
 
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
-        <p class="font-semibold">© Авторские материалы LOGO RED LIPS (@logoredlips)</p>
+        <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
     </footer>
 
     <script src="games-data.js"></script>
     <script>
-        // Тексты оформления самой страницы для 3 языков интерфейса
-        const pageTranslations = {
-            ru: {
-                home: "← На главную",
-                badge: "🎈 Раздел английского языка",
-                heading: "Игры для изучения английского",
-                subheading: "Список игр не меняется. Переключатель сверху только переводит описания.",
-                play: "Играть онлайн →"
-            },
-            uk: {
-                home: "← На головну",
-                badge: "🎈 Розділ англійської мови",
-                heading: "Ігри для вивчення англійської",
-                subheading: "Список ігор не змінюється. Перемикач зверху лише перекладає описи.",
-                play: "Грати онлайн →"
-            },
-            en: {
-                home: "← Home",
-                badge: "🎈 English Corner Track",
-                heading: "English Learning Games",
-                subheading: "Games remain the same. The top buttons only translate descriptions.",
-                play: "Play Online →"
-            }
-        };
+        const container = document.getElementById('games-container');
+        const enGames = gamesCatalog.filter(g => g.track === 'en');
 
-        // Зафиксировано: этот файл выводит ТОЛЬКО английские игры
-        const THIS_PAGE_TRACK = "en";
-
-        function translatePage(lang) {
-            // Запоминаем выбор пользователя
-            localStorage.setItem('user_lang_pref', lang);
-
-            // 1. Меняем подсветку кнопок языков
-            ['ru', 'uk', 'en'].forEach(l => {
-                const btn = document.getElementById('lang-btn-' + l);
-                if (l === lang) {
-                    btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 text-white shadow-sm font-bold";
-                } else {
-                    btn.className = "px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition";
-                }
-            });
-
-            // 2. Переводим заголовок и кнопки на странице
-            const t = pageTranslations[lang] || pageTranslations.ru;
-            document.getElementById('btn-home').innerText = t.home;
-            document.getElementById('page-badge').innerText = t.badge;
-            document.getElementById('page-heading').innerText = t.heading;
-            document.getElementById('page-subheading').innerText = t.subheading;
-
-            // 3. Перерисовываем карточки английских игр с переводом их описания на выбранный язык
-            const container = document.getElementById('games-container');
-            container.innerHTML = "";
-
-            const myGames = gamesCatalog.filter(g => g.track === THIS_PAGE_TRACK);
-
-            myGames.forEach(game => {
-                const categoryText = game.category[lang] || game.category.en;
-                const titleText = game.title[lang] || game.title.en;
-                const descText = game.desc[lang] || game.desc.en;
-
-                const card = document.createElement('div');
-                card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">${categoryText}</span>
-                            <span class="text-xl">${game.icon}</span>
-                        </div>
-                        <h4 class="text-lg font-black text-amber-950 mb-2">${titleText}</h4>
-                        <p class="text-amber-800/80 text-sm mb-6 font-medium">${descText}</p>
+        enGames.forEach(game => {
+            const card = document.createElement('div');
+            card.className = "cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg flex flex-col justify-between";
+            card.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">${game.category}</span>
+                        <span class="text-xl">${game.icon}</span>
                     </div>
-                    <a href="${game.url}" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition text-sm shadow-md">
-                        ${t.play}
-                    </a>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Запуск с сохраненным языком
-        const activeLang = localStorage.getItem('user_lang_pref') || 'ru';
-        translatePage(activeLang);
+                    <h4 class="text-lg font-black text-amber-950 mb-2">${game.title}</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">${game.desc}</p>
+                </div>
+                <a href="${game.url}" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md text-sm">
+                    Грати онлайн →
+                </a>
+            `;
+            container.appendChild(card);
+        });
     </script>
 </body>
 </html>
