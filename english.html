@@ -25,18 +25,28 @@
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
+    <!-- Шапка с переключателем языков -->
     <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200/80 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
                 ← На головну
             </a>
-            <div class="flex items-center gap-3">
-                <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
-                <span class="font-black text-amber-950 text-sm hidden sm:inline">LOGO RED LIPS</span>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
+                    <span class="font-black text-amber-950 text-sm hidden sm:inline">LOGO RED LIPS</span>
+                </div>
+                <!-- Переключатель языков -->
+                <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
+                    <a href="russian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Русский</a>
+                    <a href="ukrainian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Українська</a>
+                    <a href="english.html" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-white shadow-sm">English</a>
+                </div>
             </div>
         </div>
     </header>
 
+    <!-- Основной контент -->
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
             <span class="bg-emerald-200/60 text-emerald-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
@@ -46,61 +56,10 @@
             <p class="text-amber-800/80 text-sm mt-1">Збірка інтерактивних ігор для вивчення англійської мови.</p>
         </div>
 
-        <!-- ЕДИНЫЙ СПИСОК АНГЛИЙСКИХ ИГР -->
+        <!-- Единый плоский список английских игр -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- 1. Clothes Vocabulary -->
-            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">👕 Clothes</span>
-                        <span class="text-xl">👗</span>
-                    </div>
-                    <h4 class="text-lg font-black text-amber-950 mb-2">Clothes Vocabulary</h4>
-                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
-                        2 раунди для вивчення назв одягу англійською (dress, scarf, pants, boots, raincoat).
-                    </p>
-                </div>
-                <a href="en_clothes_words.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
-                    Грати онлайн →
-                </a>
-            </div>
-
-            <!-- 2. Clothes Shop Game -->
-            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">🛍️ Shopping</span>
-                        <span class="text-xl">🛒</span>
-                    </div>
-                    <h4 class="text-lg font-black text-amber-950 mb-2">Clothes Shop Game</h4>
-                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
-                        Слухаємо назви одягу англійською та знаходимо потрібні речі на вітрині магазину.
-                    </p>
-                </div>
-                <a href="en_clothes_shop.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
-                    Грати онлайн →
-                </a>
-            </div>
-
-            <!-- 3. School Supplies -->
-            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">🎒 School</span>
-                        <span class="text-xl">✏️</span>
-                    </div>
-                    <h4 class="text-lg font-black text-amber-950 mb-2">School Supplies</h4>
-                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
-                        Вивчаємо шкільне приладдя: ручка, pencil, board, desk, marker, notebook, book, ruler, eraser.
-                    </p>
-                </div>
-                <a href="english_school.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
-                    Грати онлайн →
-                </a>
-            </div>
-
-            <!-- 4. Seasons of the Year -->
+            <!-- Seasons of the Year -->
             <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-3">
@@ -117,7 +76,24 @@
                 </a>
             </div>
 
-            <!-- 5. Learning Colors -->
+            <!-- School Supplies -->
+            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">🎒 School</span>
+                        <span class="text-xl">✏️</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">School Supplies</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Вивчаємо шкільне приладдя: ручка, pencil, board, desk, marker, notebook, book, ruler, eraser.
+                    </p>
+                </div>
+                <a href="english_school.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <!-- Learning Colors -->
             <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-3">
@@ -134,9 +110,44 @@
                 </a>
             </div>
 
+            <!-- Clothes Vocabulary (en_clothes_words) -->
+            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">👕 Clothes</span>
+                        <span class="text-xl">👗</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Clothes Vocabulary</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        2 раунди для вивчення назв одягу англійською мовою (dress, scarf, pants, boots, raincoat).
+                    </p>
+                </div>
+                <a href="en_clothes_words.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <!-- Clothes Shop Game (en_clothes_shop) -->
+            <div class="cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">🛍️ Shopping</span>
+                        <span class="text-xl">🛒</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Clothes Shop Game</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Слухаємо назви одягу англійською та знаходимо потрібні речі на вітрині магазину.
+                    </p>
+                </div>
+                <a href="en_clothes_shop.html" target="_blank" class="block text-center w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-emerald-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
         </div>
     </main>
 
+    <!-- Футер -->
     <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
         <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
     </footer>
