@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Игры | LOGO RED LIPS</title>
+    <title>изучение русского | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24,132 +24,54 @@
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
-    <!-- Шапка с переводчиком интерфейса -->
     <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="index.html" id="nav-home" class="bg-amber-100/85 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
-                ← На главную
+            <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
+                ← На головну
             </a>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
-                    <span class="font-black text-amber-900 text-sm hidden sm:inline">LOGO RED LIPS</span>
-                </div>
-                <!-- Переключатель языка ИНТЕРФЕЙСА (переводчик) -->
-                <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
-                    <button onclick="changeInterfaceLang('ru')" id="lang-ru" class="px-3 py-1.5 rounded-xl transition">Русский</button>
-                    <button onclick="changeInterfaceLang('uk')" id="lang-uk" class="px-3 py-1.5 rounded-xl transition">Українська</button>
-                    <button onclick="changeInterfaceLang('english')" id="lang-en" class="px-3 py-1.5 rounded-xl transition">English</button>
-                </div>
-            </div>
+            <span class="font-black text-amber-950 text-sm">LOGO RED LIPS</span>
         </div>
     </header>
 
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
-            <span id="section-badge" class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🌟 Развивающие игры
+            <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
+                🌟 Напрямок
             </span>
-            <h2 id="section-title" class="text-3xl font-extrabold text-amber-950">Игры этого раздела</h2>
-            <p id="section-desc" class="text-amber-800/80 text-sm mt-1">Список игр остается неизменным, меняется только язык описаний.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">изучение русского</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Інтерактивні ігри для розвитку мовлення та лексики.</p>
         </div>
 
-        <!-- Контейнер для карточек -->
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
-        <p class="font-semibold">© Авторские материалы LOGO RED LIPS (@logoredlips)</p>
+        <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
     </footer>
 
     <script src="games-data.js"></script>
     <script>
-        // Тексты для перевода интерфейса самой страницы
-        const uiTexts = {
-            ru: {
-                home: "← На главную",
-                badge: "🌟 Развивающие игры (Русский раздел)",
-                title: "Коллекция упражнений",
-                desc: "Игры закреплены за этим разделом. Переключатель меняет язык описаний карточек.",
-                playBtn: "Играть онлайн →"
-            },
-            uk: {
-                home: "← На головну",
-                badge: "🌟 Розвиваючі ігри (Російський розділ)",
-                title: "Колекція вправ",
-                desc: "Ігри закріплені за цим розділом. Перемикач змінює мову описів карток.",
-                playBtn: "Грати онлайн →"
-            },
-            english: {
-                home: "← Home",
-                badge: "🌟 Educational Games (Russian Track)",
-                title: "Exercises Collection",
-                desc: "Games stay in this section. The switcher translates card descriptions.",
-                playBtn: "Play Online →"
-            }
-        };
+        const container = document.getElementById('games-container');
+        const ruGames = gamesCatalog.filter(g => g.track === 'ru');
 
-        // Указываем, игры КАКОГО РАЗДЕЛА должны показываться на этой странице (например, только русские игры)
-        const CURRENT_SECTION = "ru"; // (или "en" для страницы english.html)
-
-        function changeInterfaceLang(lang) {
-            localStorage.setItem('interface_lang', lang);
-
-            // Подсветка активной кнопки языка интерфейса
-            ['ru', 'uk', 'en'].forEach(l => {
-                const btn = document.getElementById('lang-' + l);
-                if (l === lang || (lang === 'english' && l === 'en')) {
-                    btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 text-white shadow-sm";
-                } else {
-                    btn.className = "px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition";
-                }
-            });
-
-            // Перевод элементов шапки и заголовков страницы
-            const t = uiTexts[lang] || uiTexts.ru;
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('section-badge').innerText = t.badge;
-            document.getElementById('section-title').innerText = t.title;
-            document.getElementById('section-desc').innerText = t.desc;
-
-            // Отрисовка карточек ИМЕННО ЭТОГО РАЗДЕЛА с переводом описаний на выбранный язык интерфейса
-            const container = document.getElementById('games-container');
-            container.innerHTML = "";
-
-            // Фильтруем игры по разделу (игры НЕ прыгают по разделам!)
-            const sectionGames = gamesCatalog.filter(game => game.track === CURRENT_SECTION);
-
-            sectionGames.forEach(game => {
-                // Выбираем язык описания в зависимости от выбранного языка интерфейса
-                // (если для английского интерфейса в игре нет перевода 'english', берем 'en' или 'ru')
-                const displayLang = (lang === 'english') ? 'en' : lang;
-
-                const catText = game.category[displayLang] || game.category.ru;
-                const titleText = game.title[displayLang] || game.title.ru;
-                const descText = game.desc[displayLang] || game.desc.ru;
-
-                const card = document.createElement('div');
-                card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">${catText}</span>
-                            <span class="text-xl">${game.icon}</span>
-                        </div>
-                        <h4 class="text-lg font-black text-amber-950 mb-2">${titleText}</h4>
-                        <p class="text-amber-800/80 text-sm mb-6 font-medium">${descText}</p>
+        ruGames.forEach(game => {
+            const card = document.createElement('div');
+            card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg flex flex-col justify-between";
+            card.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">${game.category}</span>
+                        <span class="text-xl">${game.icon}</span>
                     </div>
-                    <a href="${game.url}" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
-                        ${t.playBtn}
-                    </a>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Запуск с сохраненным языком интерфейса (по умолчанию русский)
-        const savedLang = localStorage.getItem('interface_lang') || 'ru';
-        changeInterfaceLang(savedLang);
+                    <h4 class="text-lg font-black text-amber-950 mb-2">${game.title}</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">${game.desc}</p>
+                </div>
+                <a href="${game.url}" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md text-sm">
+                    Грати онлайн →
+                </a>
+            `;
+            container.appendChild(card);
+        });
     </script>
 </body>
 </html>
