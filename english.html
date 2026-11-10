@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Games | LOGO RED LIPS</title>
+    <title>Educational Games | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,6 @@
             background: linear-gradient(135deg, #fffcf7 0%, #fef3c7 40%, #fae8ff 100%);
             background-attachment: fixed;
         }
-        img { -webkit-user-drag: none; user-drag: none; }
         .cozy-card {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(10px);
@@ -35,6 +34,7 @@
                     <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
                     <span class="font-black text-amber-950 text-sm hidden sm:inline">LOGO RED LIPS</span>
                 </div>
+                <!-- Переключатель языка интерфейса -->
                 <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
                     <a href="russian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Русский</a>
                     <a href="ukrainian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Українська</a>
@@ -47,10 +47,10 @@
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
             <span class="bg-emerald-200/60 text-emerald-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🎈 English Corner
+                🎈 Educational Games Catalog
             </span>
-            <h2 class="text-3xl font-extrabold text-amber-950">English Learning Games</h2>
-            <p class="text-amber-800/80 text-sm mt-1">Interactive games and exercises for learning English.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">All Learning Games</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Select any game from the list. Descriptions are displayed in English.</p>
         </div>
 
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -63,10 +63,7 @@
     <script src="games-data.js"></script>
     <script>
         const container = document.getElementById('games-container');
-        // Фильтруем только игры для изучения английского (track === 'en')
-        const enGames = gamesCatalog.filter(game => game.track === 'en');
-        
-        enGames.forEach(game => {
+        gamesCatalog.forEach(game => {
             const card = document.createElement('div');
             card.className = "cozy-card rounded-3xl p-6 border border-emerald-200/60 shadow-lg shadow-emerald-900/5 flex flex-col justify-between";
             card.innerHTML = `
