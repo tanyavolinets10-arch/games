@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Развивающие игры | LOGO RED LIPS</title>
+    <title>Игры на русском | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -35,7 +35,6 @@
                     <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
                     <span class="font-black text-amber-900 text-sm hidden sm:inline">LOGO RED LIPS</span>
                 </div>
-                <!-- Переключатель языка интерфейса -->
                 <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
                     <a href="russian.html" class="px-3 py-1.5 rounded-xl bg-amber-500 text-white shadow-sm">Русский</a>
                     <a href="ukrainian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Українська</a>
@@ -48,13 +47,12 @@
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
             <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🌟 Развивающие игры на русском языке
+                🌟 Изучение русского языка
             </span>
-            <h2 class="text-3xl font-extrabold text-amber-950">Коллекция интерактивных игр</h2>
-            <p class="text-amber-800/80 text-sm mt-1">Все упражнения собраны на одной странице для быстрого и удобного доступа.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">Развивающие игры</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Интерактивные упражнения для развития речи и словарного запаса.</p>
         </div>
 
-        <!-- Сюда скрипт автоматически вставит карточки на русском -->
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
@@ -62,11 +60,13 @@
         <p class="font-semibold">© Авторские материалы LOGO RED LIPS (@logoredlips)</p>
     </footer>
 
-    <!-- Подключаем данные и скрипт генерации -->
     <script src="games-data.js"></script>
     <script>
         const container = document.getElementById('games-container');
-        gamesCatalog.forEach(game => {
+        // Фильтруем только игры для изучения русского языка (track === 'ru')
+        const ruGames = gamesCatalog.filter(game => game.track === 'ru');
+        
+        ruGames.forEach(game => {
             const card = document.createElement('div');
             card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between";
             card.innerHTML = `
