@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Українські ігри | LOGO RED LIPS</title>
+    <title>Розвиваючі ігри | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -20,11 +20,11 @@
             backdrop-filter: blur(10px);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+        .cozy-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
-    <!-- Шапка с переключателем языков -->
     <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200/80 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
@@ -35,7 +35,6 @@
                     <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
                     <span class="font-black text-amber-950 text-sm hidden sm:inline">LOGO RED LIPS</span>
                 </div>
-                <!-- Переключатель языков -->
                 <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
                     <a href="russian.html" class="px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition">Русский</a>
                     <a href="ukrainian.html" class="px-3 py-1.5 rounded-xl bg-amber-500 text-white shadow-sm">Українська</a>
@@ -45,21 +44,164 @@
         </div>
     </header>
 
-    <!-- Основной контент -->
-    <main class="flex-grow max-w-5xl mx-auto px-6 py-16 w-full text-center flex flex-col items-center justify-center">
-        <div class="cozy-card max-w-lg rounded-3xl p-10 border border-amber-200/60 shadow-xl shadow-amber-900/5">
-            <span class="text-4xl mb-4 block">🇺🇦</span>
-            <h2 class="text-2xl font-black text-amber-950 mb-3">Україномовні матеріали</h2>
-            <p class="text-amber-800/80 text-sm font-medium mb-6">
-                Цей розділ наразі наповнюється. Незабаром тут з'являться нові інтерактивні ігри та розвиваючі завдання українською мовою!
-            </p>
-            <a href="index.html" class="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
-                Повернутися на головну
-            </a>
+    <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
+        <div class="mb-10 text-center sm:text-left">
+            <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
+                🌟 Розвиваючі ігри українською мовою
+            </span>
+            <h2 class="text-3xl font-extrabold text-amber-950">Колекція інтерактивних ігор</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Усі вправи зібрані на одній сторінці для швидкого та зручного доступу.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🎒 Школа</span>
+                        <span class="text-xl">✏️</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Шкільне приладдя</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Вивчаємо предмети: ручка, олівець, дошка, парта, маркер, зошит, книга, лінійка, гумка.
+                    </p>
+                </div>
+                <a href="english_school.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🛍️ Шопінг</span>
+                        <span class="text-xl">🛒</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Магазин одягу</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Слухаємо список покупок українською мовою та знаходимо потрібні речі на великій вітрині.
+                    </p>
+                </div>
+                <a href="ru_clothes_shop.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🧥 Одяг</span>
+                        <span class="text-xl">👗</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Вивчаємо назви одягу</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        2 раунди: сукня, шарф, штани, черевики, дощовик, гумові чоботи. Слухаємо озвучку та зіставляємо з малюнками.
+                    </p>
+                </div>
+                <a href="ru_clothes_words.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🎨 Кольори</span>
+                        <span class="text-xl">🌈</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Вивчаємо кольори</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Яскрава гра для вивчення та закріплення назв кольорів на слух і візуально.
+                    </p>
+                </div>
+                <a href="ru_colors.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🍂 Природа</span>
+                        <span class="text-xl">🍁</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Пори року</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Вивчення сезонів, місяців та характерних змін у природі.
+                    </p>
+                </div>
+                <a href="ru_seasons.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">⏳ Час</span>
+                        <span class="text-xl">🕒</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Час доби та дні</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Орієнтація в часі: ранок, день, вечір, ніч, а також «сьогодні, вчора, завтра».
+                    </p>
+                </div>
+                <a href="ru_time_days.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🌤️ Погода</span>
+                        <span class="text-xl">🌦️</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Погода та відчуття</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Вивчаємо погодні явища та фізичні відчуття (тепло, холодно, мокро).
+                    </p>
+                </div>
+                <a href="ru_weather.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🍎 Їжа</span>
+                        <span class="text-xl">🍓</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Вивчаємо продукти</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Розуміння мови на слух та закріплення назв продуктів харчування та страв.
+                    </p>
+                </div>
+                <a href="russian_food.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
+            <div class="cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🌫️ Логіка</span>
+                        <span class="text-xl">🌁</span>
+                    </div>
+                    <h4 class="text-lg font-black text-amber-950 mb-2">Туман і видимість</h4>
+                    <p class="text-amber-800/80 text-sm mb-6 font-medium">
+                        Причинно-наслідкові зв'язки: чому нічого не видно на вулиці, коли густий туман.
+                    </p>
+                </div>
+                <a href="ru_cause_fog.html" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
+                    Грати онлайн →
+                </a>
+            </div>
+
         </div>
     </main>
 
-    <!-- Футер -->
     <footer class="py-6 text-center text-xs text-amber-800/70 backdrop-blur-md bg-white/40 border-t border-amber-200/40">
         <p class="font-semibold">© Авторські матеріали LOGO RED LIPS (@logoredlips)</p>
     </footer>
