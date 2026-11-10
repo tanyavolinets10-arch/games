@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Українські ігри | LOGO RED LIPS</title>
+    <title>вивчення української | LOGO RED LIPS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -19,42 +19,28 @@
             backdrop-filter: blur(10px);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .cozy-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-amber-950" oncontextmenu="return false;">
 
-    <!-- Шапка с переводчиком интерфейса -->
     <header class="py-4 px-6 backdrop-blur-md bg-white/70 border-b border-amber-100/60 sticky top-0 z-50 shadow-sm">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="index.html" id="nav-home" class="bg-amber-100/85 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
+            <a href="index.html" class="bg-amber-100/80 hover:bg-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl transition text-sm flex items-center gap-1.5 shadow-sm">
                 ← На головну
             </a>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="logo.jpg" alt="Logo Red Lips" class="w-10 h-10 rounded-full object-cover border-2 border-rose-300 shadow-sm">
-                    <span class="font-black text-amber-900 text-sm hidden sm:inline">LOGO RED LIPS</span>
-                </div>
-                <!-- Переключатель языка ИНТЕРФЕЙСА (переводчик) -->
-                <div class="flex gap-1.5 bg-amber-100/60 p-1 rounded-2xl border border-amber-200/60 text-xs font-bold">
-                    <button onclick="changeInterfaceLang('ru')" id="lang-ru" class="px-3 py-1.5 rounded-xl transition">Русский</button>
-                    <button onclick="changeInterfaceLang('uk')" id="lang-uk" class="px-3 py-1.5 rounded-xl transition">Українська</button>
-                    <button onclick="changeInterfaceLang('english')" id="lang-en" class="px-3 py-1.5 rounded-xl transition">English</button>
-                </div>
-            </div>
+            <span class="font-black text-amber-950 text-sm">LOGO RED LIPS</span>
         </div>
     </header>
 
     <main class="flex-grow max-w-5xl mx-auto px-6 py-10 w-full">
         <div class="mb-10 text-center sm:text-left">
-            <span id="section-badge" class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
-                🇺🇦 Український розділ
+            <span class="bg-amber-200/60 text-amber-900 text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full inline-block mb-2">
+                🇺🇦 Напрямок
             </span>
-            <h2 id="section-title" class="text-3xl font-extrabold text-amber-950">Ігри українською мовою</h2>
-            <p id="section-desc" class="text-amber-800/80 text-sm mt-1">Розділ для ігор українською. Перемикач зверху змінює мову інтерфейсу сторінки.</p>
+            <h2 class="text-3xl font-extrabold text-amber-950">вивчення української</h2>
+            <p class="text-amber-800/80 text-sm mt-1">Інтерактивні ігри українською мовою.</p>
         </div>
 
-        <!-- Контейнер для карточек или заглушки -->
         <div id="games-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
@@ -64,104 +50,37 @@
 
     <script src="games-data.js"></script>
     <script>
-        // Тексты для перевода интерфейса самой страницы
-        const uiTexts = {
-            ru: {
-                home: "← На главную",
-                badge: "🇺🇦 Украинский раздел",
-                title: "Игры на украинском языке",
-                desc: "Этот раздел предназначен для игр на украинском. Переключатель сверху меняет язык описания интерфейса.",
-                playBtn: "Играть онлайн →",
-                devTitle: "Раздел в разработке",
-                devDesc: "Новые интерактивные игры на украинском языке появятся здесь совсем скоро!"
-            },
-            uk: {
-                home: "← На головну",
-                badge: "🇺🇦 Український розділ",
-                title: "Ігри українською мовою",
-                desc: "Цей розділ призначений для ігор українською. Перемикач зверху змінює мову інтерфейсу.",
-                playBtn: "Грати онлайн →",
-                devTitle: "Розділ у розробці",
-                devDesc: "Нові інтерактивні ігри українською мовою з'являться тут найближчим часом!"
-            },
-            english: {
-                home: "← Home",
-                badge: "🇺🇦 Ukrainian Section",
-                title: "Ukrainian Language Games",
-                desc: "This section is for Ukrainian games. The top switcher translates the interface.",
-                playBtn: "Play Online →",
-                devTitle: "Under Development",
-                devDesc: "New interactive games in Ukrainian will appear here soon!"
-            }
-        };
+        const container = document.getElementById('games-container');
+        const ukGames = gamesCatalog.filter(g => g.track === 'uk');
 
-        // ЖЕСТКО ЗАФИКСИРОВАНО: показываем только украинские игры (track === "uk")
-        const CURRENT_SECTION = "uk";
-
-        function changeInterfaceLang(lang) {
-            localStorage.setItem('interface_lang', lang);
-
-            // Подсветка активной кнопки
-            ['ru', 'uk', 'en'].forEach(l => {
-                const btn = document.getElementById('lang-' + l);
-                if (l === lang || (lang === 'english' && l === 'en')) {
-                    btn.className = "px-3 py-1.5 rounded-xl bg-amber-500 text-white shadow-sm";
-                } else {
-                    btn.className = "px-3 py-1.5 rounded-xl hover:bg-amber-200/60 text-amber-900 transition";
-                }
-            });
-
-            // Перевод текста шапки
-            const t = uiTexts[lang] || uiTexts.uk;
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('section-badge').innerText = t.badge;
-            document.getElementById('section-title').innerText = t.title;
-            document.getElementById('section-desc').innerText = t.desc;
-
-            // Рендеринг
-            const container = document.getElementById('games-container');
-            container.innerHTML = "";
-
-            const sectionGames = gamesCatalog.filter(game => game.track === CURRENT_SECTION);
-
-            if (sectionGames.length === 0) {
-                // Если украинских игр пока нет в games-data.js, выводим аккуратную заглушку на выбранном языке
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 cozy-card rounded-3xl p-8 border border-amber-200/60 shadow-lg">
-                        <div class="text-4xl mb-3">🛠️</div>
-                        <h3 class="text-xl font-extrabold text-amber-950 mb-1">${t.devTitle}</h3>
-                        <p class="text-amber-800/80 text-sm">${t.devDesc}</p>
-                    </div>
-                `;
-            } else {
-                sectionGames.forEach(game => {
-                    const displayLang = (lang === 'english') ? 'en' : lang;
-                    const catText = game.category[displayLang] || game.category.uk;
-                    const titleText = game.title[displayLang] || game.title.uk;
-                    const descText = game.desc[displayLang] || game.desc.uk;
-
-                    const card = document.createElement('div');
-                    card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg shadow-amber-900/5 flex flex-col justify-between";
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">${catText}</span>
-                                <span class="text-xl">${game.icon}</span>
-                            </div>
-                            <h4 class="text-lg font-black text-amber-950 mb-2">${titleText}</h4>
-                            <p class="text-amber-800/80 text-sm mb-6 font-medium">${descText}</p>
+        if (ukGames.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12 cozy-card rounded-3xl p-8 border border-amber-200/60 shadow-lg">
+                    <div class="text-4xl mb-3">🛠️</div>
+                    <h3 class="text-xl font-extrabold text-amber-950 mb-1">Розділ у розробці</h3>
+                    <p class="text-amber-800/80 text-sm">Нові інтерактивні ігри українською мовою з'являться тут незабаром!</p>
+                </div>
+            `;
+        } else {
+            ukGames.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "cozy-card rounded-3xl p-6 border border-amber-200/60 shadow-lg flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-extrabold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">${game.category}</span>
+                            <span class="text-xl">${game.icon}</span>
                         </div>
-                        <a href="${game.url}" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-amber-500/20 text-sm">
-                            ${t.playBtn}
-                        </a>
-                    `;
-                    container.appendChild(card);
-                });
-            }
+                        <h4 class="text-lg font-black text-amber-950 mb-2">${game.title}</h4>
+                        <p class="text-amber-800/80 text-sm mb-6 font-medium">${game.desc}</p>
+                    </div>
+                    <a href="${game.url}" target="_blank" class="block text-center w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition shadow-md text-sm">
+                        Грати онлайн →
+                    </a>
+                `;
+                container.appendChild(card);
+            });
         }
-
-        const savedLang = localStorage.getItem('interface_lang') || 'uk';
-        changeInterfaceLang(savedLang);
     </script>
 </body>
 </html>
