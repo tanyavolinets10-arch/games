@@ -48,6 +48,16 @@ const gamesCatalog = [
         desc: "Орієнтація у часі: ранок, день, вечір, ніч, а також «сьогодні, вчора, завтра».",
         url: "ru_time_days.html"
     },
+    // НОВАЯ ИГРА: Время суток (русский)
+    {
+        id: "ru_routine",
+        track: "ru",
+        icon: "⏰",
+        category: "Розклад",
+        title: "Время суток и распорядок дня",
+        desc: "Комплексна гра: вивчаємо частини доби, дії та щоденні звички за розкладом.",
+        url: "ru_routine.html" // Укажи точное имя твоего html-файла для русской версии
+    },
     {
         id: "ru_weather",
         track: "ru",
@@ -112,6 +122,16 @@ const gamesCatalog = [
         title: "Seasons of the Year",
         desc: "Вивчаємо пори року та місяці: spring, summer, autumn, winter.",
         url: "english_seasons.html"
+    },
+    // НОВАЯ ИГРА: Время суток (английский)
+    {
+        id: "en_routine",
+        track: "en",
+        icon: "⏰",
+        category: "Routine",
+        title: "Daily Routine & Time of Day",
+        desc: "Interactive routine game. Vocabulary: morning, afternoon, evening, night, daily activities.",
+        url: "en_routine.html" // Укажи точное имя твоего html-файла для английской версии
     },
     {
         id: "english_colors",
