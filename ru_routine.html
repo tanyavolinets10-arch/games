@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Время суток и Распорядок дня — Игра</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #1e293b;
+            box-sizing: border-box;
+        }
+        .hidden { display: none !important; }
+
+        .box {
+            background: rgba(255, 255, 255, 0.98);
+            border: 4px solid #38bdf8;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-card {
+            max-width: 550px;
+            text-align: center;
+        }
+
+        .btn {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            color: #0369a1;
+            font-weight: bold;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            margin-top: 8px;
+            transition: 0.1s;
+        }
+        .btn:hover { background: #e0f2fe; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cards-grid, .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 650px;
+        }
+        .time-card, .option-card {
+            background: white;
+            border: 4px solid #bae6fd;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.1s, border-color 0.1s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+        .time-card:hover, .option-card:hover {
+            transform: scale(1.03);
+            border-color: #0284c7;
+        }
+        .time-card img, .option-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        .time-card span, .option-card span {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #0369a1;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .audio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 650px;
+        }
+        .audio-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            padding: 12px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .audio-row:hover { background: #e0f2fe; border-color: #0284c7; }
+
+        .img-container {
+            position: relative;
+            width: 100%;
+            max-width: 820px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #bae6fd;
+            background: #e2e8f0;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+        }
+        .shop-hotspot {
+            position: absolute;
+            cursor: pointer;
+            border: 2px dashed transparent;
+            background: transparent;
+            transition: 0.1s;
+        }
+        .shop-hotspot:hover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.25);
+            border-radius: 6px;
+        }
+        .shop-hotspot.found {
+            background: rgba(16, 185, 129, 0.3) !important;
+            border-color: #10b981 !important;
+        }
+
+        #feedback-popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            font-size: 80px;
+            z-index: 1000;
+            transition: transform 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        #feedback-popup.show {
+            transform: translateX(-50%) scale(1);
+        }
+
+        .ctrl-btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .ctrl-btn:hover { background: #0369a1; }
+        .shuffle-btn { background: #10b981; }
+        .shuffle-btn:hover { background: #059669; }
+    </style>
+</head>
+<body>
+
+    <div id="feedback-popup">⭐</div>
+
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="menu-screen" class="box menu-card">
+        <div style="font-size: 40px;">🌅☀️🌇🌙</div>
+        <h2 style="color: #0369a1; margin: 5px 0;">Части суток и Распорядок дня</h2>
+        <p style="font-size: 13px; color: #64748b;">Выберите режим игры:</p>
+        
+        <button id="btn-mode-1" class="btn">🖼️ Раунд 1: Части суток (слушай слово — выбирай картинку)</button>
+        <button id="btn-mode-2" class="btn">🏠 Раунд 2: Поиск предметов в комнате по времени суток</button>
+        <button id="btn-mode-3" class="btn">🗣️ Раунд 3: Услышь фразу распорядка — найди картинку</button>
+        <button id="btn-mode-4" class="btn">🎧 Раунд 4: Увидь картинку распорядка — найди звук</button>
+    </div>
+
+    <!-- РАУНД 1 -->
+    <div id="game-screen-1" class="box hidden">
+        <div class="top-bar">
+            <div style="display: flex; gap: 8px;">
+                <button class="home-btn ctrl-btn">🏠 Меню</button>
+                <button class="shuffle-btn-cls ctrl-btn shuffle-btn">🔀 Перемешать</button>
+            </div>
+            <div id="cards-task-text-1" style="color: #0369a1; font-size: 14px;">Слушай слово и найди картинку:</div>
+            <div style="font-size: 13px;">⭐ Баллы: <span id="score-1" style="color: #0284c7;">0</span> | <span id="progress-1">1 / 12</span></div>
+        </div>
+        <button id="repeat-voice-btn-1" class="ctrl-btn" style="background:#0284c7; padding: 10px 20px; font-size: 14px;">🔊 Повторить слово</button>
+        <div id="cards-grid-1" class="cards-grid"></div>
+    </div>
+
+    <!-- РАУНД 2 -->
+    <div id="game-screen-2" class="box hidden">
+        <div class="top-bar">
+            <div style="display: flex; gap: 8px;">
+                <button class="home-btn ctrl-btn">🏠 Меню</button>
+                <button class="shuffle-btn-cls ctrl-btn shuffle-btn">🔀 Перемешать</button>
+            </div>
+            <div id="game-task-text-2" style="color: #0369a1; font-size: 14px;">Задание...</div>
+            <div style="font-size: 13px;">⭐ Баллы: <span id="score-2" style="color: #0284c7;">0</span> | <span id="progress-text-2">1 / 4</span></div>
+        </div>
+        <div class="img-container">
+            <img src="https://i.postimg.cc/63j0wtrr/sutki.jpg" alt="Части суток">
+            <div id="game-hotspots-2" style="position: absolute; inset: 0;"></div>
+        </div>
+    </div>
+
+    <!-- РАУНД 3 -->
+    <div id="game-screen-3" class="box hidden">
+        <div class="top-bar">
+            <div style="display: flex; gap: 8px;">
+                <button class="home-btn ctrl-btn">🏠 Меню</button>
+                <button class="shuffle-btn-cls ctrl-btn shuffle-btn">🔀 Перемешать</button>
+            </div>
+            <div style="font-size: 13px;">⭐ Баллы: <span id="score-3" style="color: #0284c7;">0</span> | Задание: <span id="progress-3">1 / 15</span></div>
+        </div>
+        <div id="task-banner-3" class="task-banner" style="background:#e0f2fe; border: 2px solid #7dd3fc; padding: 12px 20px; border-radius: 14px; text-align: center; font-size: 18px; font-weight: bold; color: #0369a1; width: 100%; box-sizing: border-box;">Задание...</div>
+        <button id="repeat-voice-btn-3" class="ctrl-btn" style="background:#0284c7; padding: 10px 20px; font-size: 14px;">🔊 Повторить фразу</button>
+        <div id="options-grid-3" class="options-grid"></div>
+    </div>
+
+    <!-- РАУНД 4 -->
+    <div id="game-screen-4" class="box hidden">
+        <div class="top-bar">
+            <div style="display: flex; gap: 8px;">
+                <button class="home-btn ctrl-btn">🏠 Меню</button>
+                <button class="shuffle-btn-cls ctrl-btn shuffle-btn">🔀 Перемешать</button>
+            </div>
+            <div style="font-size: 13px;">⭐ Баллы: <span id="score-4" style="color: #0284c7;">0</span> | Задание: <span id="progress-4">1 / 15</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <img id="target-img-4" src="" alt="Иллюстрация" style="width: 160px; height: 120px; object-fit: cover; border-radius: 12px; border: 3px solid #0284c7;">
+            <div style="font-weight: bold; color: #0369a1; font-size: 15px;">Какое действие на картинке? Найди фразу на слух:</div>
+        </div>
+        <div id="audio-list-4" class="audio-list"></div>
+    </div>
+
+    <!-- ЭКРАН ПОБЕДЫ -->
+    <div id="win-screen" class="box menu-card hidden">
+        <div style="font-size: 50px;">🏆</div>
+        <h2 style="color: #0369a1; margin: 5px 0;">Молодец! Отличный результат!</h2>
+        <p style="font-size: 13px; color: #64748b;">Ты отлично прошёл все раунды игры!</p>
+        <button class="home-btn btn" style="background: #0284c7; color: white;">В меню 🏠</button>
+    </div>
+
+    <script>
+        const partsNames = { morning: "Утро", day: "День", evening: "Вечер", night: "Ночь" };
+
+        const timeCardsData = [
+            { id: "morning", name: "Утро", img: "https://i.postimg.cc/7C1LCbTw/utro.png", praise: "Правильно, это утро! Солнце встает, начинается новый день." },
+            { id: "day", name: "День", img: "https://i.postimg.cc/8FdCFsrV/den'.png", praise: "Правильно, это день! Солнце высоко, все активны и играют." },
+            { id: "evening", name: "Вечер", img: "https://i.postimg.cc/Jy3hytBL/vecer.png", praise: "Правильно, это вечер! Закат, время отдыхать и готовиться ко сну." },
+            { id: "night", name: "Ночь", img: "https://i.postimg.cc/LqksqhZF/noc'.png", praise: "Правильно, это ночь! Луна и звезды, все спят." }
+        ];
+
+        const actionsData = [
+            { id: "prosypaus", text: "Сейчас утро, я просыпаюсь", img: "https://i.postimg.cc/Kk7yFv8s/prosypaus'.png", period: "morning" },
+            { id: "cisu", text: "Сейчас утро, я чищу зубы", img: "https://i.postimg.cc/YSxtsd5G/cisu-zuby.png", period: "morning" },
+            { id: "zavtrakau", text: "Сейчас утро, я завтракаю", img: "https://i.postimg.cc/dkRKvtVj/zavtrakau.png", period: "morning" },
+            
+            { id: "idu_v_skolu", text: "Сейчас день, я иду в школу", img: "https://i.postimg.cc/njKtZchd/idu-v-skolu.png", period: "day" },
+            { id: "ucus_v_skole", text: "Сейчас день, я учусь в школе", img: "https://i.postimg.cc/Hc0CHskh/ucus'-v-skole.png", period: "day" },
+            { id: "igrau_s_druzami", text: "Сейчас день, я гуляю с друзьями", img: "https://i.postimg.cc/gXyPdk24/igrau-s-druz'ami.png", period: "day" },
+
+            { id: "vozvrasaus_domoj", text: "Сейчас вечер, я возвращаюсь домой", img: "https://i.postimg.cc/34jH7JxC/vozvrasaus'-domoj.png", period: "evening" },
+            { id: "delau_domasnee", text: "Сейчас вечер, я делаю домашнее задание", img: "https://i.postimg.cc/mz3GR2gw/delau-domasnee-zadanie.png", period: "evening" },
+            { id: "igrau_v_telefon", text: "Сейчас вечер, я играю в телефон", img: "https://i.postimg.cc/CBCVYLx4/igrau-v-telefon.png", period: "evening" },
+
+            { id: "splu", text: "Сейчас ночь, я сплю", img: "https://i.postimg.cc/34jH7Jxq/splu.png", period: "night" },
+            { id: "nabludau", text: "Сейчас ночь, я наблюдаю за звёздами", img: "https://i.postimg.cc/34jH7JxS/nabludau-za-zvezdami.png", period: "night" }
+        ];
+
+        // Уроки и тетради перенесены в категорию "evening" (вечер)
+        const roomItems = [
+            { id: "rassvet", part: "morning", name: "рассвет в окне", praise: "Правильно! Солнце встаёт, начинается утро.", x: 18, y: 5, w: 7, h: 41 },
+            { id: "budilnik", part: "morning", name: "будильник", praise: "Правильно! Звонит будильник, пора просыпаться.", x: 6, y: 48, w: 10, h: 21 },
+            { id: "chas", part: "morning", name: "чай", praise: "Правильно! Пьём утренний чай.", x: 17, y: 55, w: 8, h: 11 },
+            { id: "schetka", part: "morning", name: "зубная щётка", praise: "Правильно! Чистим зубы по утрам.", x: 25, y: 37, w: 4, h: 12 },
+            
+            { id: "solnce", part: "day", name: "большое солнце", praise: "Правильно! Солнце высоко на небе светит ярким днём.", x: 42, y: 4, w: 8, h: 19 },
+            { id: "ryukzak", part: "day", name: "школьный рюкзак", praise: "Правильно! Школьный рюкзак для школы.", x: 62, y: 32, w: 10, h: 20 },
+            { id: "sup", part: "day", name: "тарелка с супом", praise: "Правильно! Тарелка с супом, время обеда днем.", x: 80, y: 48, w: 7, h: 10 },
+            { id: "myach", part: "day", name: "футбольный мяч", praise: "Правильно! Футбол, играем с друзьями на улице днем.", x: 80, y: 77, w: 7, h: 13 },
+
+            { id: "uroki", part: "evening", name: "уроки и тетради", praise: "Правильно! Делаем домашнее задание и уроки вечером.", x: 68, y: 48, w: 9, h: 8 },
+            { id: "lampa", part: "evening", name: "настольная лампа", praise: "Правильно! Включаем настольную лампу вечером.", x: 23, y: 58, w: 7, h: 22 },
+            { id: "skazka", part: "evening", name: "книга сказок", praise: "Правильно! Книга сказок, читаем перед сном.", x: 23, y: 80, w: 16, h: 15 },
+            { id: "zakat", part: "evening", name: "розовый закат", praise: "Правильно! Розово-малиновый закат в окне вечером.", x: 7, y: 4, w: 8, h: 46 },
+            { id: "multiki", part: "evening", name: "мультики по телевизору", praise: "Правильно! Смотрим мультики по телевизору вечером.", x: 93, y: 27, w: 7, h: 11 },
+
+            { id: "luna", part: "night", name: "луна и звёзды", praise: "Правильно! Луна и звёзды на ночном небе.", x: 77, y: 9, w: 14, h: 24 },
+            { id: "pizhama", part: "night", name: "пижама", praise: "Правильно! Одеваем пижаму и ложимся спать ночью.", x: 79, y: 39, w: 7, h: 8 },
+            { id: "maska", part: "night", name: "маска для сна", praise: "Правильно! Одеваем маску для сна и засыпаем.", x: 92, y: 44, w: 5, h: 7 }
+        ];
+
+        let currentMode = 1;
+        let tasksList = [];
+        let taskIndex = 0;
+        let currentTask = null;
+        let score = 0;
+        let isBlocked = false;
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                    let u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'ru-RU';
+                    u.rate = 0.85;
+                    window.speechSynthesis.speak(u);
+                } catch(e) {}
+            }
+        }
+
+        function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+        function showFeedback(isCorrect) {
+            const popup = document.getElementById('feedback-popup');
+            popup.innerText = isCorrect ? "⭐" : "💩";
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 800);
+        }
+
+        function goMenu() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('menu-screen').classList.remove('hidden');
+            document.getElementById('game-screen-1').classList.add('hidden');
+            document.getElementById('game-screen-2').classList.add('hidden');
+            document.getElementById('game-screen-3').classList.add('hidden');
+            document.getElementById('game-screen-4').classList.add('hidden');
+            document.getElementById('win-screen').classList.add('hidden');
+        }
+
+        function startGame(mode) {
+            currentMode = mode;
+            score = 0;
+            taskIndex = 0;
+            document.getElementById('menu-screen').classList.add('hidden');
+            
+            document.getElementById('game-screen-1').classList.add('hidden');
+            document.getElementById('game-screen-2').classList.add('hidden');
+            document.getElementById('game-screen-3').classList.add('hidden');
+            document.getElementById('game-screen-4').classList.add('hidden');
+
+            if (mode === 1) document.getElementById('game-screen-1').classList.remove('hidden');
+            if (mode === 2) document.getElementById('game-screen-2').classList.remove('hidden');
+            if (mode === 3) document.getElementById('game-screen-3').classList.remove('hidden');
+            if (mode === 4) document.getElementById('game-screen-4').classList.remove('hidden');
+
+            buildTasks();
+            loadTask();
+        }
+
+        function buildTasks() {
+            if (currentMode === 1) {
+                let pool = [];
+                for (let i = 0; i < 3; i++) {
+                    pool.push(...timeCardsData);
+                }
+                tasksList = shuffle(pool).map(card => ({ target: card }));
+            } else if (currentMode === 2) {
+                let parts = ['morning', 'day', 'evening', 'night'];
+                tasksList = shuffle(parts).map(part => ({
+                    type: 'part',
+                    part: part,
+                    remaining: roomItems.filter(i => i.part === part)
+                }));
+            } else if (currentMode === 3 || currentMode === 4) {
+                let pool = [];
+                for (let i = 0; i < 15; i++) {
+                    pool.push(actionsData[i % actionsData.length]);
+                }
+                tasksList = shuffle(pool).map(item => ({ target: item }));
+            }
+        }
+
+        function shuffleTasks() {
+            if (isBlocked) return;
+            buildTasks();
+            taskIndex = 0;
+            loadTask();
+            speak("Задания перемешаны!");
+        }
+
+        function repeatVoice() {
+            if (currentTask && currentTask.target) {
+                speak(currentTask.target.text || currentTask.target.name);
+            }
+        }
+
+        function loadTask() {
+            if (taskIndex >= tasksList.length) {
+                document.getElementById('game-screen-1').classList.add('hidden');
+                document.getElementById('game-screen-2').classList.add('hidden');
+                document.getElementById('game-screen-3').classList.add('hidden');
+                document.getElementById('game-screen-4').classList.add('hidden');
+                document.getElementById('win-screen').classList.remove('hidden');
+                speak("Ура! Все задания успешно выполнены!");
+                if (typeof confetti === 'function') confetti();
+                return;
+            }
+
+            isBlocked = false;
+            currentTask = tasksList[taskIndex];
+
+            if (currentMode === 1) {
+                document.getElementById('score-1').innerText = score;
+                document.getElementById('progress-1').innerText = `${taskIndex + 1} / ${tasksList.length}`;
+                renderCardsGrid();
+                speak(currentTask.target.name);
+            } else if (currentMode === 2) {
+                document.getElementById('score-2').innerText = score;
+                document.getElementById('progress-text-2').innerText = `${taskIndex + 1} / ${tasksList.length}`;
+                renderRoomHotspots();
+
+                let partName = partsNames[currentTask.part];
+                let text = `Найди предметы для: ${partName}`;
+                document.getElementById('game-task-text-2').innerHTML = `${text} (осталось найти: <span id="rem-count-2">${currentTask.remaining.length}</span>)`;
+                speak(text);
+            } else if (currentMode === 3) {
+                document.getElementById('score-3').innerText = score;
+                document.getElementById('progress-3').innerText = `${taskIndex + 1} / ${tasksList.length}`;
+                document.getElementById('task-banner-3').innerText = "Слушай фразу и выбери правильную картинку:";
+                renderOptionsGrid(currentTask.target);
+                speak(currentTask.target.text);
+            } else if (currentMode === 4) {
+                document.getElementById('score-4').innerText = score;
+                document.getElementById('progress-4').innerText = `${taskIndex + 1} / ${tasksList.length}`;
+                document.getElementById('target-img-4').src = currentTask.target.img;
+                renderAudioList(currentTask.target);
+                speak("Найди фразу на слух для этой картинки");
+            }
+        }
+
+        function renderCardsGrid() {
+            let grid = document.getElementById('cards-grid-1');
+            grid.innerHTML = "";
+            let shuffledCards = shuffle([...timeCardsData]);
+            shuffledCards.forEach(card => {
+                let cardDiv = document.createElement('div');
+                cardDiv.className = "time-card";
+                cardDiv.innerHTML = `
+                    <img src="${card.img}" alt="${card.name}">
+                    <span>${card.name}</span>
+                `;
+                cardDiv.onclick = () => handleCardClick(card);
+                grid.appendChild(cardDiv);
+            });
+        }
+
+        function renderRoomHotspots() {
+            let layer = document.getElementById('game-hotspots-2');
+            layer.innerHTML = "";
+            roomItems.forEach(item => {
+                let div = document.createElement('div');
+                div.className = "shop-hotspot";
+                div.style.left = item.x + '%';
+                div.style.top = item.y + '%';
+                div.style.width = item.w + '%';
+                div.style.height = item.h + '%';
+                
+                let alreadyFound = currentTask.foundItems && currentTask.foundItems.includes(item.id);
+                if (alreadyFound) {
+                    div.classList.add('found');
+                }
+
+                div.onclick = () => handleRoomItemClick(item, div);
+                layer.appendChild(div);
+            });
+        }
+
+        function renderOptionsGrid(targetItem) {
+            let grid = document.getElementById('options-grid-3');
+            grid.innerHTML = "";
+
+            let wrongOptions = shuffle(actionsData.filter(i => i.id !== targetItem.id)).slice(0, 3);
+            let options = shuffle([targetItem, ...wrongOptions]);
+
+            options.forEach(opt => {
+                let card = document.createElement('div');
+                card.className = "option-card";
+                card.innerHTML = `
+                    <img src="${opt.img}" alt="Иллюстрация">
+                    <span>${opt.text}</span>
+                `;
+                card.onclick = () => handleChoice(opt.id, targetItem.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function renderAudioList(targetItem) {
+            let listDiv = document.getElementById('audio-list-4');
+            listDiv.innerHTML = "";
+
+            let wrongOptions = shuffle(actionsData.filter(i => i.id !== targetItem.id)).slice(0, 3);
+            let options = shuffle([targetItem, ...wrongOptions]);
+
+            options.forEach(opt => {
+                let row = document.createElement('div');
+                row.className = "audio-row";
+                row.innerHTML = `
+                    <div style="font-weight: bold; color: #0369a1; font-size: 15px;">${opt.text}</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="ctrl-btn" onclick="event.stopPropagation(); speak('${opt.text}')" style="background: #0284c7;">🔊 Слушать</button>
+                        <button class="ctrl-btn" onclick="handleChoice('${opt.id}', '${targetItem.id}')" style="background: #10b981;">👉 Выбрать</button>
+                    </div>
+                `;
+                listDiv.appendChild(row);
+            });
+        }
+
+        function handleCardClick(card) {
+            if (isBlocked) return;
+
+            if (card.id === currentTask.target.id) {
+                isBlocked = true;
+                score += 1;
+                document.getElementById('score-1').innerText = score;
+                showFeedback(true);
+                speak(card.praise);
+                if (typeof confetti === 'function' && Math.random() > 0.6) confetti({ particleCount: 30, spread: 60 });
+                setTimeout(() => { taskIndex++; loadTask(); }, 1800);
+            } else {
+                showFeedback(false);
+                speak("Не то! Попробуй ещё раз.");
+            }
+        }
+
+        function handleRoomItemClick(item, divElement) {
+            if (isBlocked) return;
+
+            if (!currentTask.foundItems) currentTask.foundItems = [];
+            if (currentTask.foundItems.includes(item.id)) return;
+
+            if (item.part === currentTask.part) {
+                currentTask.foundItems.push(item.id);
+                divElement.classList.add('found');
+                score += 1;
+                document.getElementById('score-2').innerText = score;
+                showFeedback(true);
+                speak(item.praise || `Правильно! Это ${item.name}`);
+
+                let idx = currentTask.remaining.findIndex(i => i.id === item.id);
+                if (idx !== -1) currentTask.remaining.splice(idx, 1);
+
+                if (currentTask.remaining.length === 0) {
+                    isBlocked = true;
+                    if (typeof confetti === 'function') confetti({ particleCount: 50, spread: 70 });
+                    setTimeout(() => { taskIndex++; loadTask(); }, 1600);
+                } else {
+                    document.getElementById('rem-count-2').innerText = currentTask.remaining.length;
+                }
+            } else {
+                showFeedback(false);
+                speak(`Это ${item.name}, но сейчас мы ищем предметы для периода: ${partsNames[currentTask.part]}.`);
+            }
+        }
+
+        function handleChoice(selectedId, targetId) {
+            if (isBlocked) return;
+
+            if (selectedId === targetId) {
+                isBlocked = true;
+                score += 1;
+                if (currentMode === 3) document.getElementById('score-3').innerText = score;
+                if (currentMode === 4) document.getElementById('score-4').innerText = score;
+
+                showFeedback(true);
+                speak("Правильно!");
+                if (typeof confetti === 'function' && Math.random() > 0.6) confetti({ particleCount: 30, spread: 60 });
+                setTimeout(() => { taskIndex++; loadTask(); }, 1500);
+            } else {
+                showFeedback(false);
+                speak("Не то! Попробуй ещё раз.");
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn-mode-1').onclick = () => startGame(1);
+            document.getElementById('btn-mode-2').onclick = () => startGame(2);
+            document.getElementById('btn-mode-3').onclick = () => startGame(3);
+            document.getElementById('btn-mode-4').onclick = () => startGame(4);
+
+            document.querySelectorAll('.home-btn').forEach(btn => btn.onclick = goMenu);
+            document.querySelectorAll('.shuffle-btn-cls').forEach(btn => btn.onclick = shuffleTasks);
+
+            document.getElementById('repeat-voice-btn-1').onclick = repeatVoice;
+            document.getElementById('repeat-voice-btn-3').onclick = repeatVoice;
+        });
+    </script>
+</body>
+</html>
