@@ -35,7 +35,7 @@
         }
 
         .menu-card {
-            max-width: 500px;
+            max-width: 520px;
             text-align: center;
         }
 
@@ -100,7 +100,7 @@
             border-radius: 12px;
             overflow: hidden;
             border: 2px solid #cbd5e1;
-            background: #e2e8f0;
+            background-color: #e2e8f0;
         }
         .img-container img {
             width: 100%;
@@ -108,6 +108,32 @@
             display: block;
             pointer-events: none;
             user-select: none;
+        }
+
+        .img-error-banner {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            background: rgba(153, 27, 27, 0.95);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 60;
+            text-align: center;
+            line-height: 1.45;
+        }
+
+        .img-error-banner label {
+            display: inline-block;
+            margin-top: 6px;
+            background: #ffffff;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         /* По умолчанию зоны невидимы и не закрывают картинку; подсветка только при наведении */
@@ -193,13 +219,26 @@
 
         <div id="game-status" class="status-msg"></div>
 
-        <div class="img-container">
-            <img id="kitchen-img-game" src="https://i.postimg.cc/9QQsHbBy/eda-na-kuhne.jpg" alt="Еда на кухне">
+        <div id="selection-stage" class="img-container">
+            <img id="kitchen-img-game" alt="Еда на кухне">
             <div id="game-hotspots" style="position: absolute; inset: 0;"></div>
+            <div id="img-load-error" class="img-error-banner hidden">
+                <div id="img-error-text"></div>
+                <label>
+                    📂 Выбрать картинку с компьютера
+                    <input type="file" id="local-img-input" accept="image/*" style="display:none;">
+                </label>
+            </div>
         </div>
     </div>
 
     <script>
+        const IMAGE_URL = "https://i.postimg.cc/9QQsHbBy/eda-na-kuhne.jpg";
+        const FALLBACK_IMAGES = [
+            "eda-na-kuhne.jpg",
+            "еда на кухне.jpeg"
+        ];
+
         const items = [
             { id: "pizza_table", prep: "на", place: "на столе", name: "пицца на столе", x: 3, y: 59, w: 17, h: 14 },
             { id: "teapot_table", prep: "на", place: "на столе", name: "чайник на столе", x: 12, y: 48, w: 7, h: 12 },
@@ -236,6 +275,53 @@
         let score = 0;
         let currentTarget = null;
         let roundQueue = [];
+        let customObjectUrl = null;
+
+        function loadKitchenImage() {
+            const img = document.getElementById("kitchen-img-game");
+            const errBanner = document.getElementById("img-load-error");
+            const errText = document.getElementById("img-error-text");
+
+            if (customObjectUrl) {
+                errBanner.classList.add("hidden");
+                img.src = customObjectUrl;
+                return;
+            }
+
+            const candidates = [IMAGE_URL, ...FALLBACK_IMAGES];
+            let idx = 0;
+
+            errBanner.classList.add("hidden");
+            errText.textContent = "";
+
+            function tryNext() {
+                if (idx >= candidates.length) {
+                    errBanner.classList.remove("hidden");
+                    errText.textContent = `Ссылка ${IMAGE_URL} не загрузилась, локальные файлы рядом не найдены. Выберите картинку с компьютера или положите файл рядом с HTML.`;
+                    return;
+                }
+                const currentSrc = candidates[idx++];
+                img.onload = () => {
+                    if (img.naturalWidth > 0) {
+                        errBanner.classList.add("hidden");
+                    }
+                };
+                img.onerror = () => {
+                    tryNext();
+                };
+                img.src = currentSrc;
+            }
+
+            tryNext();
+        }
+
+        document.getElementById("local-img-input").addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            if (customObjectUrl) URL.revokeObjectURL(customObjectUrl);
+            customObjectUrl = URL.createObjectURL(file);
+            loadKitchenImage();
+        });
 
         const speechFixes = [
             [/\bна полке\b/gi, "на по́лке"],
@@ -347,6 +433,8 @@
             document.getElementById("menu-screen").classList.add("hidden");
             document.getElementById("game-screen").classList.remove("hidden");
             document.getElementById("game-status").innerText = "";
+
+            loadKitchenImage();
 
             const layer = document.getElementById("game-hotspots");
             layer.innerHTML = "";
