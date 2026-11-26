@@ -148,5 +148,14 @@ const gamesCatalog = [
         title: "Learning Colors",
         desc: "Закріплюємо кольори англійською: red, blue, green, yellow, pink, purple.",
         url: "english_colors.html"
+    },
+    {
+        id: "en_preposition_1",
+        track: "en",
+        icon: "🍽️",
+        category: "Prepositions",
+        title: "Prepositions in the Kitchen (Part 1)",
+        desc: "Practice prepositions of place (on, in, under) with kitchen items and scenes.",
+        url: "en_preposition_1.html"
     }
 ];
