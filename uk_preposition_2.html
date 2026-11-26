@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>На ліжку, під ліжком, над ліжком — Прийменники</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+        .hidden { display: none !important; }
+
+        .box {
+            background: white;
+            border: 4px solid #38bdf8;
+            border-radius: 20px;
+            padding: 22px;
+            width: 100%;
+            max-width: 1000px;
+            box-sizing: border-box;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-card {
+            max-width: 520px;
+            text-align: center;
+        }
+
+        .btn {
+            background: #f0f9ff;
+            border: 2px solid #bae6fd;
+            color: #0369a1;
+            font-weight: bold;
+            padding: 13px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 15px;
+            margin-top: 8px;
+            transition: 0.12s;
+        }
+        .btn:hover { background: #e0f2fe; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+
+        .prep-filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .prep-pill {
+            background: #e0f2fe;
+            border: 2px solid #7dd3fc;
+            color: #0369a1;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .prep-pill.active {
+            background: #0284c7;
+            border-color: #0284c7;
+            color: white;
+        }
+
+        .img-container {
+            position: relative;
+            width: 100%;
+            max-width: 940px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #cbd5e1;
+            background-color: #e2e8f0;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .img-error-banner {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            background: rgba(153, 27, 27, 0.94);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 60;
+            text-align: center;
+        }
+
+        .img-error-banner label {
+            display: inline-block;
+            margin-top: 6px;
+            background: #ffffff;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Підсвічування зон лише при наведенні курсора */
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: transparent;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: background 0.14s, border-color 0.14s, transform 0.12s;
+        }
+        .hotspot:hover {
+            background: rgba(14, 165, 233, 0.36);
+            border-color: rgba(2, 132, 199, 0.92);
+            transform: scale(1.01);
+        }
+
+        .hotspot-correct {
+            border: 3px solid #16a34a !important;
+            background: rgba(22, 163, 74, 0.48) !important;
+        }
+
+        .hotspot-wrong {
+            border: 3px solid #dc2626 !important;
+            background: rgba(220, 38, 38, 0.45) !important;
+        }
+
+        .ctrl-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 6px 11px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .ctrl-btn:hover { background: #e2e8f0; }
+
+        .status-msg {
+            font-size: 15px;
+            font-weight: bold;
+            color: #0369a1;
+            text-align: center;
+        }
+        .status-msg:empty {
+            display: none;
+        }
+
+        .menu-hint {
+            font-size: 12px;
+            color: #475569;
+            margin-top: 6px;
+            min-height: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ГОЛОВНЕ МЕНЮ -->
+    <div id="menu-screen" class="box menu-card">
+        <div style="font-size: 36px;">🛏️🧸👾🐱</div>
+        <h2 style="color: #0369a1; margin: 4px 0;">На, під, над ліжком</h2>
+        <p style="font-size: 13px; color: #64748b; margin: 0;">
+            Запитання «Де...?» та квест «Хто там?»
+        </p>
+
+        <div class="prep-filter-row" id="menu-prep-filters" style="margin-top: 8px;"></div>
+        <div id="menu-filter-info" class="menu-hint"></div>
+
+        <button type="button" id="btn-mode-1" class="btn">🎯 Режим 1: Відповідай на запитання («Де...?» та «Хто...?»)</button>
+        <button type="button" id="btn-mode-2" class="btn">🔊 Режим 2: Вільний клік з озвученням</button>
+    </div>
+
+    <!-- ІГРОВИЙ ЕКРАН -->
+    <div id="game-screen" class="box hidden">
+        <div class="top-bar">
+            <button type="button" id="btn-back-menu" class="ctrl-btn">🏠 Меню</button>
+            <div id="game-task-text" style="color: #0369a1; font-size: 16px;">Завдання...</div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+                <button type="button" id="repeat-task-btn" class="ctrl-btn">🔊 Озвучити</button>
+                <span>⭐ <span id="score">0</span></span>
+            </div>
+        </div>
+
+        <div id="game-status" class="status-msg"></div>
+
+        <div id="selection-stage" class="img-container">
+            <img id="scene-img" src="предлоги на под над.jpeg" alt="На, під, над ліжком">
+            <div id="game-hotspots" style="position: absolute; inset: 0;"></div>
+            <div id="img-load-error" class="img-error-banner hidden">
+                <div id="img-error-text"></div>
+                <label>
+                    📂 Обрати зображення з комп'ютера
+                    <input type="file" id="local-img-input" accept="image/*" style="display:none;">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const items = [
+            { id: "tshirt_above", prep: "над", kind: "item", name: "футболка над ліжком", x: 34, y: 8, w: 9, h: 17 },
+            { id: "pants_above", prep: "над", kind: "item", name: "штани над ліжком", x: 41, y: 15, w: 8, h: 16 },
+            { id: "hat_above", prep: "над", kind: "item", name: "капелюх над ліжком", x: 47, y: 4, w: 8, h: 11 },
+            { id: "glasses_above", prep: "над", kind: "item", name: "окуляри над ліжком", x: 48, y: 15, w: 6, h: 6 },
+            { id: "doll_above", prep: "над", kind: "item", name: "лялька над ліжком", x: 54, y: 13, w: 6, h: 20 },
+            { id: "bear_above", prep: "над", kind: "item", name: "ведмедик над ліжком", x: 60, y: 8, w: 8, h: 17 },
+            { id: "sneaker_above", prep: "над", kind: "item", name: "кеди над ліжком", x: 66, y: 17, w: 5, h: 11 },
+            { id: "alien_above", prep: "над", kind: "character", name: "інопланетянин над ліжком", answerText: "Над ліжком інопланетянин", x: 78, y: 3, w: 10, h: 14 },
+
+            { id: "tshirt_on", prep: "на", kind: "item", name: "футболка на ліжку", x: 20, y: 42, w: 13, h: 15 },
+            { id: "pants_on", prep: "на", kind: "item", name: "штани на ліжку", questionText: "Де на ліжку?", answerText: "На ліжку штани", x: 32, y: 47, w: 8, h: 15 },
+            { id: "hat_on", prep: "на", kind: "item", name: "капелюх на ліжку", x: 34, y: 39, w: 7, h: 9 },
+            { id: "glasses_on", prep: "на", kind: "item", name: "окуляри на ліжку", x: 41, y: 45, w: 7, h: 6 },
+            { id: "doll_on", prep: "на", kind: "item", name: "лялька на ліжку", answerText: "На ліжку лялька", x: 46, y: 34, w: 7, h: 16 },
+            { id: "cat_on", prep: "на", kind: "character", name: "кіт на ліжку", questionText: "Хто на ліжку?", answerText: "На ліжку кіт", x: 56, y: 39, w: 10, h: 13 },
+            { id: "bear_on", prep: "на", kind: "item", name: "ведмедик на ліжку", x: 66, y: 31, w: 8, h: 17 },
+            { id: "sneaker_on", prep: "на", kind: "item", name: "кеди на ліжку", x: 70, y: 40, w: 6, h: 11 },
+
+            { id: "tshirt_under", prep: "під", kind: "item", name: "футболка під ліжком", x: 14, y: 79, w: 12, h: 11 },
+            { id: "pants_under", prep: "під", kind: "item", name: "штани під ліжком", x: 23, y: 82, w: 12, h: 13 },
+            { id: "hat_under", prep: "під", kind: "item", name: "капелюх під ліжком", x: 30, y: 76, w: 8, h: 9 },
+            { id: "glasses_under", prep: "під", kind: "item", name: "окуляри під ліжком", x: 36, y: 87, w: 7, h: 6 },
+            { id: "doll_under", prep: "під", kind: "item", name: "лялька під ліжком", x: 46, y: 72, w: 7, h: 18 },
+            { id: "sneaker_under", prep: "під", kind: "item", name: "кеди під ліжком", x: 51, y: 81, w: 7, h: 12 },
+            { id: "bear_under", prep: "під", kind: "item", name: "ведмедик під ліжком", x: 55, y: 72, w: 8, h: 18 },
+            { id: "monster_under", prep: "під", kind: "character", name: "монстрик під ліжком", questionText: "Хто під ліжком?", answerText: "Під ліжком циклоп або монстр", x: 69, y: 73, w: 7, h: 13 }
+        ];
+
+        const PREP_BED_PHRASES = {
+            "на": "на ліжку",
+            "під": "під ліжком",
+            "над": "над ліжком"
+        };
+
+        const PREPOSITIONS = ["на", "під", "над"];
+        let activePrepFilter = "усі";
+        let gameMode = 1;
+        let score = 0;
+        let currentTarget = null;
+        let roundQueue = [];
+        let isAdvancing = false;
+        let customImageUrl = null;
+        let speechTimer = null;
+        let currentAudio = null;
+
+        const sceneImg = document.getElementById("scene-img");
+        const imgErrorBanner = document.getElementById("img-load-error");
+        const imgErrorText = document.getElementById("img-error-text");
+
+        sceneImg.onload = () => {
+            if (sceneImg.naturalWidth > 0) imgErrorBanner.classList.add("hidden");
+        };
+        sceneImg.onerror = () => {
+            if (!customImageUrl) {
+                imgErrorBanner.classList.remove("hidden");
+                imgErrorText.textContent = "Зображення поруч із HTML не знайдено. Оберіть файл із комп'ютера.";
+            }
+        };
+
+        document.getElementById("local-img-input").addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            if (customImageUrl) URL.revokeObjectURL(customImageUrl);
+            customImageUrl = URL.createObjectURL(file);
+            sceneImg.src = customImageUrl;
+        });
+
+        function stopAudio() {
+            if (speechTimer) {
+                clearTimeout(speechTimer);
+                speechTimer = null;
+            }
+            if (currentAudio) {
+                try {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                } catch (e) {}
+                currentAudio = null;
+            }
+            if ("speechSynthesis" in window) {
+                try { window.speechSynthesis.cancel(); } catch (e) {}
+            }
+        }
+
+        function speakSystemFallback(phrase, onDone) {
+            if (!("speechSynthesis" in window)) {
+                if (typeof onDone === "function") speechTimer = setTimeout(onDone, 1200);
+                return;
+            }
+            try {
+                const u = new SpeechSynthesisUtterance(phrase);
+                u.lang = "uk-UA";
+                u.rate = 0.9;
+                u.pitch = 1.0;
+
+                const voices = window.speechSynthesis.getVoices() || [];
+                const ukVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("uk"));
+                if (ukVoice) u.voice = ukVoice;
+
+                let doneCalled = false;
+                const finish = () => {
+                    if (doneCalled) return;
+                    doneCalled = true;
+                    if (speechTimer) {
+                        clearTimeout(speechTimer);
+                        speechTimer = null;
+                    }
+                    if (typeof onDone === "function") onDone();
+                };
+
+                u.onend = finish;
+                u.onerror = finish;
+                speechTimer = setTimeout(finish, Math.max(2200, phrase.length * 110));
+                window.speechSynthesis.speak(u);
+            } catch (e) {
+                if (typeof onDone === "function") speechTimer = setTimeout(onDone, 1200);
+            }
+        }
+
+        function speakUkrainian(text, onDone) {
+            const phrase = String(text || "").trim();
+            stopAudio();
+
+            if (!phrase) {
+                if (typeof onDone === "function") onDone();
+                return;
+            }
+
+            let finished = false;
+            const finishOnce = () => {
+                if (finished) return;
+                finished = true;
+                if (speechTimer) {
+                    clearTimeout(speechTimer);
+                    speechTimer = null;
+                }
+                if (typeof onDone === "function") onDone();
+            };
+
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=uk&q=${encodeURIComponent(phrase)}`;
+
+            try {
+                const aud = new Audio(ttsUrl);
+                currentAudio = aud;
+
+                aud.onended = () => {
+                    currentAudio = null;
+                    finishOnce();
+                };
+                aud.onerror = () => {
+                    currentAudio = null;
+                    if (!finished) {
+                        speakSystemFallback(phrase, finishOnce);
+                    }
+                };
+
+                speechTimer = setTimeout(() => {
+                    if (!finished) {
+                        speakSystemFallback(phrase, finishOnce);
+                    }
+                }, Math.max(3500, phrase.length * 140));
+
+                const playPromise = aud.play();
+                if (playPromise && typeof playPromise.catch === "function") {
+                    playPromise.catch(() => {
+                        currentAudio = null;
+                        if (!finished) {
+                            speakSystemFallback(phrase, finishOnce);
+                        }
+                    });
+                }
+            } catch (e) {
+                speakSystemFallback(phrase, finishOnce);
+            }
+        }
+
+        function formatQuestion(item) {
+            if (!item) return "";
+            if (item.questionText) return item.questionText;
+            const placePhrase = PREP_BED_PHRASES[item.prep] || `${item.prep} ліжком`;
+            if (item.kind === "character") {
+                return `Хто ${placePhrase}?`;
+            }
+            return `Де ${item.name}?`;
+        }
+
+        function formatAnswer(item) {
+            if (!item) return "";
+            if (item.answerText) return item.answerText;
+            const trimmed = String(item.name || "").trim();
+            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+        }
+
+        function updateMenuFilterInfo() {
+            const infoEl = document.getElementById("menu-filter-info");
+            if (activePrepFilter === "усі") {
+                infoEl.innerText = `Усі прийменники: «на», «під», «над» (зон: ${items.length})`;
+                return;
+            }
+            const count = items.filter(i => i.prep === activePrepFilter).length;
+            infoEl.innerText = `Прийменник «${activePrepFilter}» — зон у вибірці: ${count}`;
+        }
+
+        function renderMenuFilters() {
+            const box = document.getElementById("menu-prep-filters");
+            box.innerHTML = "";
+            ["усі", ...PREPOSITIONS].forEach(p => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `prep-pill ${activePrepFilter === p ? "active" : ""}`;
+                btn.innerText = p === "усі" ? "Усі прийменники" : `«${p}»`;
+                btn.addEventListener("click", () => {
+                    activePrepFilter = p;
+                    renderMenuFilters();
+                    updateMenuFilterInfo();
+                });
+                box.appendChild(btn);
+            });
+            updateMenuFilterInfo();
+        }
+
+        function getFilteredItems() {
+            if (activePrepFilter === "усі") return items;
+            const filtered = items.filter(i => i.prep === activePrepFilter);
+            return filtered.length ? filtered : items;
+        }
+
+        function goMenu() {
+            isAdvancing = false;
+            stopAudio();
+            document.getElementById("menu-screen").classList.remove("hidden");
+            document.getElementById("game-screen").classList.add("hidden");
+        }
+
+        function shuffle(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function startGame(mode) {
+            gameMode = mode;
+            score = 0;
+            isAdvancing = false;
+            document.getElementById("score").innerText = score;
+            document.getElementById("menu-screen").classList.add("hidden");
+            document.getElementById("game-screen").classList.remove("hidden");
+            document.getElementById("game-status").innerText = "";
+
+            const layer = document.getElementById("game-hotspots");
+            layer.innerHTML = "";
+
+            items.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "hotspot";
+                div.dataset.id = item.id;
+                div.style.left = item.x + "%";
+                div.style.top = item.y + "%";
+                div.style.width = item.w + "%";
+                div.style.height = item.h + "%";
+                div.addEventListener("click", () => handleGameClick(item, div));
+                layer.appendChild(div);
+            });
+
+            if (mode === 1) {
+                document.getElementById("repeat-task-btn").classList.remove("hidden");
+                roundQueue = shuffle(getFilteredItems());
+                nextTask();
+            } else {
+                document.getElementById("repeat-task-btn").classList.add("hidden");
+                document.getElementById("game-task-text").innerText = "Режим 2: Наведіть на предмет або персонажа та натисніть";
+                speakUkrainian("Наводьте на предмети та персонажів і натискайте", null);
+            }
+        }
+
+        function nextTask() {
+            if (!roundQueue.length) {
+                roundQueue = shuffle(getFilteredItems());
+            }
+            currentTarget = roundQueue.pop();
+            const qText = formatQuestion(currentTarget);
+            document.getElementById("game-task-text").innerText = qText;
+            speakUkrainian(qText, () => {
+                isAdvancing = false;
+            });
+        }
+
+        function speakCurrentTask() {
+            if (currentTarget && !isAdvancing) {
+                speakUkrainian(formatQuestion(currentTarget), () => {
+                    isAdvancing = false;
+                });
+            }
+        }
+
+        function handleGameClick(item, el) {
+            if (gameMode === 2) {
+                const ans = formatAnswer(item);
+                document.getElementById("game-status").innerText = ans;
+                speakUkrainian(ans, null);
+                return;
+            }
+
+            if (!currentTarget || isAdvancing) return;
+
+            if (item.id === currentTarget.id) {
+                isAdvancing = true;
+                score += 1;
+                document.getElementById("score").innerText = score;
+                el.classList.add("hotspot-correct");
+
+                const answerPhrase = formatAnswer(item);
+                document.getElementById("game-status").innerText = answerPhrase;
+
+                speakUkrainian(answerPhrase, () => {
+                    el.classList.remove("hotspot-correct");
+                    document.getElementById("game-status").innerText = "";
+                    nextTask();
+                });
+            } else {
+                el.classList.add("hotspot-wrong");
+                const wrongAns = formatAnswer(item);
+                document.getElementById("game-status").innerText = `${wrongAns}. Спробуй ще раз!`;
+                speakUkrainian(`${wrongAns}. Спробуй ще раз!`, null);
+                setTimeout(() => {
+                    el.classList.remove("hotspot-wrong");
+                }, 700);
+            }
+        }
+
+        document.getElementById("btn-mode-1").addEventListener("click", () => startGame(1));
+        document.getElementById("btn-mode-2").addEventListener("click", () => startGame(2));
+        document.getElementById("btn-back-menu").addEventListener("click", goMenu);
+        document.getElementById("repeat-task-btn").addEventListener("click", speakCurrentTask);
+
+        renderMenuFilters();
+    </script>
+</body>
+</html>
