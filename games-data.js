@@ -93,6 +93,15 @@ const gamesCatalog = [
         desc: "Тренуємо розуміння та вживання прийменників місця на прикладі кухні та предметів.",
         url: "ru_preposition_1.html"
     },
+    {
+        id: "ru_preposition_2",
+        track: "ru",
+        icon: "🧸",
+        category: "Прийменники",
+        title: "Предлоги в комнате (часть 2)",
+        desc: "Вивчаємо прийменники «на, над, під» та повторюємо предмети, іграшки й одяг у кімнаті.",
+        url: "ru_preposition_2.html"
+    },
 
     // --- 3. ENGLISH ---
     {
@@ -157,5 +166,14 @@ const gamesCatalog = [
         title: "Prepositions in the Kitchen (Part 1)",
         desc: "Practice prepositions of place (on, in, under) with kitchen items and scenes.",
         url: "en_preposition_1.html"
+    },
+    {
+        id: "en_preposition_2",
+        track: "en",
+        icon: "🧸",
+        category: "Prepositions",
+        title: "Prepositions in the Room (Part 2)",
+        desc: "Practice prepositions (on, above, under) and review room items, toys, and clothes.",
+        url: "en_preposition_2.html"
     }
 ];
