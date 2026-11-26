@@ -4,15 +4,6 @@ const gamesCatalog = [
 
     // --- 2. ИЗУЧЕНИЕ РУССКОГО ---
     {
-        id: "ru_prepositions_1",
-        track: "ru",
-        icon: "📍",
-        category: "Прийменники · Частина 1",
-        title: "Предлоги «на, в, под» (Часть 1)",
-        desc: "Вивчаємо просторові відношення (переважно «на, в», також «під», зрідка «біля, над»).",
-        url: "ru_prepositions_1.html" // Замени на точное имя своего HTML-файла
-    },
-    {
         id: "ru_clothes_shop",
         track: "ru",
         icon: "🛍️",
@@ -95,15 +86,6 @@ const gamesCatalog = [
     },
 
     // --- 3. ENGLISH ---
-    {
-        id: "en_prepositions_1",
-        track: "en",
-        icon: "📍",
-        category: "Прийменники · Частина 1",
-        title: "Prepositions: on, in, under (Part 1)",
-        desc: "Вивчаємо слова: on, in, under (основні), а також by / near, above.",
-        url: "en_prepositions_1.html" // Замени на точное имя своего HTML-файла
-    },
     {
         id: "school",
         track: "en",
